@@ -66,9 +66,8 @@ exports.createField = function(recipientId, type) {
             reply.err(recipientId, 'Not valid type for HOLD_CREATE:'+type);
             return;
     }
-    console.log('Message:%s', message);
     var value = "HOLD.{type}${key}".replace("{type}", type).replace("{key}",activity_id);
-    fieldMessage(recipientId, message, value); 
+    reply.requireFieldMessage(recipientId, message, value);
   });
 }
 
@@ -90,7 +89,7 @@ exports.savefield = function(recipientId, tmpfield, message){
         hold.createField(recipientId, next);
         return;
       }
-      UserSys.setField(recipientId, '', function(err){
+      UserSys.cleanField(recipientId, function(err){
         if(err){
           reply.err(recipientId, err);
           return;
@@ -223,26 +222,6 @@ exports.showMessage = function(recipientId, userActivity){
 }
 
 /*
- * 
- 活動：哈囉！今天想到什麼好玩的嗎？
- 位置：給個大概位置吧？城市名稱
- 費用：費用怎麼算？免費、均攤、酬庸
- 類別：給活動一個類別吧！例如：電影、吃飯...
- *
- */
-function fieldMessage(recipientId, messageText, userfield){
-  console.log('===hold.fieldMessage===');
-  console.log('user.field:%s', userfield);
-  UserSys.setField(recipientId, userfield, function(err){
-    if(err){
-      reply.err(recipientId, err);
-      return;
-    }
-    reply.sendTextMessage(recipientId, messageText);
-  });
-}
-
-/*
  * show charge message
 */
 exports.chargeMessage = function(recipientId){
@@ -274,7 +253,7 @@ exports.chargeMessage = function(recipientId){
     }
   };  
   //Update.holdUserField(recipientId, "");
-  UserSys.setField(recipientId, '', function(err){
+  UserSys.cleanField(recipientId, '', function(err){
     if(err){
       reply.err(recipientId, err);
       return;
@@ -314,7 +293,7 @@ exports.genderMessage = function(recipientId){
       }
     }
   };
-  UserSys.setField(recipientId, '', function(err){
+  UserSys.cleanField(recipientId, function(err){
     if(err){
       reply.err(recipientId, err);
       return;

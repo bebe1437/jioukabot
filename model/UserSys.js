@@ -76,3 +76,7 @@ UserSys.setField = function(user_id, value, fn){
         fn(err);
     });
 }
+
+UserSys.cleanField = function(user_id, fn){
+    this.setField(user_id, '', fn);
+}

@@ -1,6 +1,7 @@
 var request = require('request');
 var config = require('config');
 var PAGE_ACCESS_TOKEN = config.get('pageAccessToken');
+var UserSys = require('./model/UserSys');
 
 /*
  * err: Invalid Operation
@@ -114,4 +115,20 @@ exports.sendButtonMessage = function(recipientId, text, buttons){
   };  
 
   this.callSendAPI(messageData);
+}
+
+/*
+ * Require field message
+*/
+exports.requireFieldMessage = function(recipientId, messageText, field){
+  console.log('===reply.requireFieldMessage===');
+  console.log('require field:%s', field);
+  var reply = this;
+  UserSys.setField(recipientId, field, function(err){
+    if(err){
+      reply.err(recipientId, err);
+      return;
+    }
+    reply.sendTextMessage(recipientId, messageText);
+  });
 }
