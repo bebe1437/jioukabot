@@ -18,6 +18,7 @@ const
   Sync = require("sync");
   
 var check = require('./check');
+var route = require('./route');
 var User = require('./model/User');
 var app = express();
 
@@ -91,7 +92,7 @@ app.post('/webhook', function (req, res) {
       pageEntry.messaging.forEach(function(messagingEvent) {
         User.valid(messagingEvent.sender.id, function(user, err){
           if(err || !user){
-            reply.invalidUser(messagingEvent.sender.id, err);
+            route.invalidUser(messagingEvent.sender.id, err);
           }else{
             if (messagingEvent.optin) {
               check.receivedAuthentication(messagingEvent);
@@ -100,9 +101,7 @@ app.post('/webhook', function (req, res) {
             } else if (messagingEvent.delivery) {
               check.receivedDeliveryConfirmation(messagingEvent);
             } else if (messagingEvent.postback) {
-                Sync(function(){
-                  check.receivedPostback(messagingEvent);
-                });
+              check.receivedPostback(messagingEvent);
             } else {
               console.log("Webhook received unknown messagingEvent: ", messagingEvent);
             }            
