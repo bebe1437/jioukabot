@@ -61,12 +61,12 @@ UserSys.setPostback = function(user_id, value, fn){
         console.log('postback time:%s', Date.now() - postback.updated_time);
         if(postback && postback.value == value && !postback.isExpired()){
             console.log('postback does not expired.');
-            fn('Receive the same postback in %d seconds.', expired_time/1000 );
+            fn('Receive the same postback in '+expired_time/1000+' seconds.' );
             return;
         }
         console.log('set postback:%s', value);
         sys.set(user_id, 'postback', value, function(err){
-                fn(err);
+            fn(err);
         });
     });
 }
