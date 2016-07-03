@@ -218,10 +218,12 @@ exports.saveGenderField = function(recipientId, gender){
 [取消] [停止配對]
  *
  */
+var gender_desc =['限男', '限女', '不限'];
 exports.showMessage = function(recipientId, userActivity){
   userActivity.showCharge(function(str){
     var content = '『來揪咖吧』'
     .concat('\r\n').concat('費用：').concat(str)
+    .concat('\r\n').concat('性別：').concat(gender_desc[userActivity.gender])
     .concat('\r\n').concat('類別：').concat(userActivity.type)
     .concat('\r\n').concat('地點：').concat(userActivity.location)
     .concat('\r\n').concat('內容：').concat(userActivity.content); 
@@ -336,6 +338,7 @@ exports.editMessage = function(recipientId) {
     userActivity.showCharge(function(str){
     var content = '『來揪咖吧』'
     .concat('\r\n').concat('費用：').concat(str)
+    .concat('\r\n').concat('性別：').concat(gender_desc[userActivity.gender])
     .concat('\r\n').concat('類別：').concat(userActivity.type)
     .concat('\r\n').concat('地點：').concat(userActivity.location)
     .concat('\r\n').concat('內容：').concat(userActivity.content); 
