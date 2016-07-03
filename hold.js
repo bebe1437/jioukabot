@@ -198,15 +198,6 @@ exports.saveGenderField = function(recipientId, gender){
     });
   });
 }
-/*
- * [揪咖]
-費用：免費、均攤、佣金
-類別：電影、桌遊等關鍵字
-地點：城市
-活動：簡單講述活動內容
-[取消] [停止配對]
- *
- */
 
 /*
  * show charge message

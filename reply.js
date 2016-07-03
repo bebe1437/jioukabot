@@ -21,7 +21,22 @@ exports.invalidUser = function(recipientId, err){
   this.sendTextMessage(recipientId, "Invalid User, we got problem to retrive your user information."); 
 } 
 
+/*
+ * reply random message
+ *
+ */
+exports.randomMessage = function(recipientId, messageText){
+  this.sendTextMessage(recipientId, '你是說'+messageText+'嗎？請輸入help/幫助.'); 
+} 
 
+
+/*
+ * reply attach message
+ *
+ */
+exports.responseAttach = function(recipientId){
+  this.sendTextMessage(recipientId, '喔! 我收到囉^_^'); 
+}
 /*
  * Call the Send API. The message data goes in the body. If successful, we'll 
  * get the message id in a response 

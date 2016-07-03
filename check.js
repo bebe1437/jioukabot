@@ -82,14 +82,14 @@ exports.receivedMessage = function(event) {
       default:
         UserSys.get(senderID, 'field', function(field, err){
           if(err || !field || !field.value){
-            reply.sendTextMessage(senderID, messageText);
+            reply.randomMessage(senderID, messageText);
             return;
           }
           command.savefield(senderID, field.value, messageText);
         });
     }
   } else if (messageAttachments) {
-    reply.sendTextMessage(senderID, "Message with attachment received");
+    reply.responseAttach(senderID, "Message with attachment received");
   }
 }
 
