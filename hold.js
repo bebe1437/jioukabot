@@ -78,26 +78,18 @@ exports.savefield = function(recipientId, tmpfield, message){
   var activity_id = tmp[1];
   var hold = this;
   
-  UserActivity.findAsHost(recipientId, function(useractivity){
-    if(!useractivity){
-      reply.err(recipientId, 'Can not find activity:%s', activity_id);
-      return;
-    }
-    
-    var field = tmp[0];
-    var value = message;
-    
-    save(recipientId, activity_id, field, value, function(next, err){
+  var field = tmp[0];
+  var value = message;
+  save(recipientId, activity_id, field, value, function(next, err){
       if(err){
         reply.err(recipientId, err);
         return;
-      };
+      }
       if(next){
-        console.log('execute next field:%s', next);
+        console.log('Create next field:%s', next);
         hold.createField(recipientId, next);
         return;
       }
-      //Update.holdUserField(recipientId, "");
       UserSys.setField(recipientId, '', function(err){
         if(err){
           reply.err(recipientId, err);
@@ -106,8 +98,7 @@ exports.savefield = function(recipientId, tmpfield, message){
         UserActivity.findByKey(recipientId, activity_id, function(userActivity){
               hold.showMessage(recipientId, userActivity);
         });
-      });
-    });    
+      }); 
   });
 }
 
