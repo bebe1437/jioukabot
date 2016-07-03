@@ -138,6 +138,6 @@ exports.receivedPostback = function(event) {
           route.err(err);
           return;
         }
-        route.postback(senderID, payload);
+        route.postback(senderID, JSON.parse(payload));
       }); 
 }
