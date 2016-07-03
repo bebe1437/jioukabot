@@ -1,6 +1,6 @@
 var route = require('./route');
 var UserSys = require('./model/UserSys');
-var Sync = require('sync');
+var SysLog = require('./model/SysLog');
 /*
  * Authorization Event
  *
@@ -126,13 +126,14 @@ exports.receivedPostback = function(event) {
   // The 'payload' param is a developer-defined field which is set in a postback 
   // button for Structured Messages. 
   var payload = event.postback.payload;
+  SysLog.set(senderID, 'postback', payload);
 
   console.log("Received postback for user %d and page %d with payload '%s' " + 
     "at %d", senderID, recipientID, payload, timeOfPostback);
  
   
   
-  //locak same payload in 5 seconds
+      //locak same payload in 5 seconds
       UserSys.setPostback(senderID, payload, function(err){
         if(err){
           route.err(err);
