@@ -84,7 +84,7 @@ exports.receivedMessage = function(event) {
             reply.sendTextMessage(senderID, messageText);
             return;
           }
-          command.savefield(senderID, field, messageText);
+          command.savefield(senderID, field.value, messageText);
         });
     }
   } else if (messageAttachments) {
