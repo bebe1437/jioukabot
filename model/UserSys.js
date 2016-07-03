@@ -49,9 +49,10 @@ UserSys.prototype.isExpired = function(){
 }
 
 UserSys.setPostback = function(user_id, value, fn){
+    var sys = this;
     this.get(user_id, 'postback', function(postback){
         if(!postback){
-            this.set(user_id, 'postback', value, function(err){
+            sys.set(user_id, 'postback', value, function(err){
                 fn(err);
             });
             return;
@@ -60,7 +61,7 @@ UserSys.setPostback = function(user_id, value, fn){
             fn('Receive the same postback in %d seconds.', expired_time/1000 );
             return;
         }
-        this.set(user_id, 'postback', value, function(err){
+        sys.set(user_id, 'postback', value, function(err){
                 fn(err);
         });
     });
