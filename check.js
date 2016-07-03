@@ -1,6 +1,7 @@
 var reply = require('./reply');
 var command = require('./command');
 var User = require('./model/User');
+var UserSys = require('./model/UserSys');
 /*
  * Authorization Event
  *
@@ -135,5 +136,13 @@ exports.receivedPostback = function(event) {
 
   console.log("Received postback for user %d and page %d with payload '%s' " + 
     "at %d", senderID, recipientID, payload, timeOfPostback);
-  command.postback(senderID, payload);
+ 
+  //locak same payload in 5 seconds
+  UserSys.setPostback(senderID, payload, function(err){
+    if(err){
+      reply.err(err);
+      return;
+    }
+    command.postback(senderID, payload);
+  });
 }
