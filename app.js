@@ -18,7 +18,6 @@ const
   Sync = require("sync");
   
 var check = require('./check');
-var reply = require('./reply');
 var User = require('./model/User');
 var app = express();
 
