@@ -2,6 +2,7 @@ var route = require("../index");
 var db = require("../../model/db").get();
 var Activity = require("../../model/Activity");
 var UserActivity = require("../../model/UserActivity");
+var UserSyc = require("../../model/UserSyc");
 var help = require("./help");
 
 const routes = {
@@ -23,12 +24,23 @@ exports.process = function(recipientId, payload){
 exports.next = function(action, recipientId, value, activity, next){
   switch(action){
     case 'edit':
-      help.editMessage(recipientId, activity);
+      UserSyc.cleanField(recipientId, function(err){
+        if(err){
+          route.err(recipientId, err);
+          return;
+        }
+        help.editMessage(recipientId, activity);
+      });
       break;
     case 'show':
       var message = new UserActivity(activity).output;
-      console.log('===show:%s===', message);
-      route.sendTextMessage(recipientId, message);
+      UserSyc.cleanField(recipientId, function(err){
+        if(err){
+          route.err(recipientId, err);
+          return;
+        }
+        route.sendTextMessage(recipientId, message);
+      });
       break;
     default:
       this.requireField(recipientId, activity.activity_id, action, next);
