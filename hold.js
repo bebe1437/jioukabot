@@ -270,3 +270,29 @@ exports.editMessage = function(recipientId) {
     }); 
   });
 }
+
+exports.testMessage = function(recipientId, message){
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message:{
+      text: message,
+      quick_replies:[{
+        content_type: 'text',
+        title: '免費',
+        payload: '$HOLD_CHARGE.FREE'
+      },{
+        content_type: 'text',
+        title: '均攤',
+        payload: '$HOLD_CHARGE.SHARE'
+      },{
+        content_type: 'text',
+        title: '零用錢',
+        payload: '$HOLD_CHARGE.POCKETMONEY'
+      }]
+    }
+  };
+
+  reply.callSendAPI(messageData);
+}
