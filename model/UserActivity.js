@@ -18,12 +18,22 @@ const CHARGE_FREE ="免費", CHARGE_SHARE="均攤(%s)", CHARGE_POCKETMONEY="酬�
     }
 }
 */
+const gender_desc =['限男', '限女', '不限'];
 module.exports = UserActivity;
 function UserActivity(obj){
     for(var key in obj){
         //利用遞迴的特性把物件的key跟屬性串在一起
         this[key] = obj[key];
     }
+    this.showCharge(function(charge){
+        var output = '『來揪咖吧』'
+        .concat('\r\n').concat('費用：').concat(charge)
+        .concat('\r\n').concat('性別：').concat(gender_desc[this.gender])
+        .concat('\r\n').concat('類別：').concat(this.type)
+        .concat('\r\n').concat('地點：').concat(this.location)
+        .concat('\r\n').concat('內容：').concat(this.content);    
+        this['output'] = output;    
+    });
 };
 
 UserActivity.prototype.showCharge = function(fn){

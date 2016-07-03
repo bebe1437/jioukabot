@@ -3,7 +3,6 @@ var Update = require('./model/Update');
 var Activity = require('./model/Activity');
 var UserSys = require('./model/UserSys');
 var UserActivity = require('./model/UserActivity');
-var User = require('./model/User');
 
 function initActivity(user_id, fn){
   console.log('===hold.initActivity===');
@@ -95,7 +94,7 @@ exports.savefield = function(recipientId, tmpfield, message){
           return;
         }
         UserActivity.findByKey(recipientId, activity_id, function(userActivity){
-              hold.showMessage(recipientId, userActivity);
+          reply.sendTextMessage(recipientId, userActivity.output);
         });
       }); 
   });
@@ -145,7 +144,7 @@ exports.saveChargeField = function(recipientId, charge){
             return;
           }
           UserActivity.findByKey(recipientId, activity_id, function(userActivity){
-              hold.showMessage(recipientId, userActivity);
+            reply.sendTextMessage(recipientId, userActivity.output);
           });
         });
         break;
@@ -208,18 +207,6 @@ exports.saveGenderField = function(recipientId, gender){
 [取消] [停止配對]
  *
  */
-var gender_desc =['限男', '限女', '不限'];
-exports.showMessage = function(recipientId, userActivity){
-  userActivity.showCharge(function(str){
-    var content = '『來揪咖吧』'
-    .concat('\r\n').concat('費用：').concat(str)
-    .concat('\r\n').concat('性別：').concat(gender_desc[userActivity.gender])
-    .concat('\r\n').concat('類別：').concat(userActivity.type)
-    .concat('\r\n').concat('地點：').concat(userActivity.location)
-    .concat('\r\n').concat('內容：').concat(userActivity.content); 
-    reply.sendTextMessage(recipientId, content);
-  });
-}
 
 /*
  * show charge message
@@ -305,21 +292,13 @@ exports.genderMessage = function(recipientId){
 
 exports.editMessage = function(recipientId) {
   UserActivity.findAsHost(recipientId, function(userActivity){
-    userActivity.showCharge(function(str){
-    var content = '『來揪咖吧』'
-    .concat('\r\n').concat('費用：').concat(str)
-    .concat('\r\n').concat('性別：').concat(gender_desc[userActivity.gender])
-    .concat('\r\n').concat('類別：').concat(userActivity.type)
-    .concat('\r\n').concat('地點：').concat(userActivity.location)
-    .concat('\r\n').concat('內容：').concat(userActivity.content); 
-    
+    var content = userActivity.output;
     var activity_id = userActivity.activity_id;
     reply.sendButtonMessage(recipientId, content, [
       {type:'postback', title:'編輯揪咖', payload:'$HOLD_EDIT$'+activity_id},
       {type:'postback', title:'停止配對', payload:'$HOLD_STOP$'+activity_id},
       {type:'postback', title:'取消揪咖', payload:'$HOLD_CANCEL$'+activity_id}
-      ]);
-    }); 
+    ]);
   });
 }
 
