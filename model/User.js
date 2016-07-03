@@ -28,8 +28,6 @@ function create(fbUserID, fn){
             fn(null, error);
             return;
         }
-        
-        userprofile.field="";
         var ref = db.database().ref("/users/"+fbUserID);
         ref.set(userprofile, function(err){
             if(err){

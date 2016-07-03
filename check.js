@@ -80,7 +80,7 @@ exports.receivedMessage = function(event) {
         break;
       default:
         UserSys.get(senderID, 'field', function(field, err){
-          if(err || !field || !field.value )){
+          if(err || !field || !field.value){
             reply.sendTextMessage(senderID, messageText);
             return;
           }
