@@ -35,13 +35,13 @@ UserActivity.prototype.showCharge = function(fn){
     }
     switch(charge.type){
         case 0:
-            fn('免費');
+            fn('免費(Free)');
             break;
         case 1:
-            fn('均攤:'+charge.price);
+            fn('均攤($%s)'.replace('%s', charge.price));
             break;
         case 2:
-            fn('零用錢:' + charge.price);
+            fn('零用錢($%s)'.replace('%s', charge.price));
             break;
         default:
             fn('Not defined');

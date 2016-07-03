@@ -91,7 +91,11 @@ exports.savefield = function(recipientId, tmpfield, message){
       if(next){
         console.log('execute next field:%s', next);
         hold.createField(recipientId, next);
+        return;
       }
+      UserActivity.findByKey(recipientId, activity_id, function(userActivity){
+              hold.showMessage(recipientId, userActivity);
+      });
     });    
   });
 }
@@ -108,22 +112,28 @@ function save(recipientId, activity_id, field, field_value, fn){
     case 'LOCATION':
       fn('CHARGE');
       break;
+    case 'CHARGE/TYPE':
+      fn('CHARGE/PRICE');
+      break;
+    case 'CHARGE/PRICE':
+      fn();
+      break;
     default:
       fn(null, 'Undefined field:'+ field);
   }
 }
 
 exports.saveChargeField = function(recipientId, charge){
+  console.log('===hold.saveChargeField:%s===', charge)
   var hold = this;
   initActivity(recipientId, function(activity_id, err){
     if(err){
       reply.err(recipientId, err);
       return;
     }
-    var field = 'charge';
     switch(charge){
       case 'FREE':
-        save(recipientId, activity_id, field, {
+        save(recipientId, activity_id, 'charge', {
           type: 0,
           price: 0
         }, function(err){
@@ -132,37 +142,26 @@ exports.saveChargeField = function(recipientId, charge){
             return;
           }
           UserActivity.findByKey(recipientId, activity_id, function(userActivity){
-            hold.showMessage(recipientId, userActivity);
+              hold.showMessage(recipientId, userActivity);
           });
         });
         break;
       case 'SHARE':
-        saveCharge(recipientId, activity_id, 1);
-        break;
       case 'POCKETMONEY':
-        saveCharge(recipientId, activity_id, 2);
+        var charge_type = charge == 'SHARE' ? 1 : 2;
+        save(recipientId, activity_id, 'CHARGE/TYPE', charge_type, function(next, err){
+          if(err){
+            reply.err(recipientId, err);
+            return;
+          }
+          hold.createField(recipientId, next);
+        });
         break;
       default:
         reply.err(recipientId, 'Undefined charge:'+ charge);
     }
   });
 }
-
-function saveCharge(recipientId, activity_id, type){
-  var field = 'charge';
-  var fields = {
-    type: type
-  }
-  var hold = this;
-  save(recipientId, activity_id, field, fields, function(next, err){
-    if(err){
-      reply.err(recipientId, err);
-    }else{
-      hold.createField(recipientId, 'CHARGE/PRICE');
-    }
-  });
-}
-
 
 /*
  * [揪咖]
@@ -216,7 +215,7 @@ exports.chargeMessage = function(recipientId){
         type: "template",
         payload: {
           template_type: "button",
-          text: "費用怎麼算？免費、均攤、佣金",
+          text: "費用怎麼算？免費、均攤、零用錢",
           buttons:[{
             type: "postback",
             title: "免費",
