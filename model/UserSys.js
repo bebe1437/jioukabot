@@ -52,15 +52,19 @@ UserSys.setPostback = function(user_id, value, fn){
     var sys = this;
     this.get(user_id, 'postback', function(postback){
         if(!postback){
+            console.log('postback does not exist.');
             sys.set(user_id, 'postback', value, function(err){
                 fn(err);
             });
             return;
         }
-        if(!postback.isExpired()){
+        console.log('postback time:%s', Date.now() - postback.updated_time);
+        if(postback && postback.value == value && !postback.isExpired()){
+            console.log('postback does not expired.');
             fn('Receive the same postback in %d seconds.', expired_time/1000 );
             return;
         }
+        console.log('set postback:%s', value);
         sys.set(user_id, 'postback', value, function(err){
                 fn(err);
         });
