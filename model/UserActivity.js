@@ -1,7 +1,5 @@
 var db = require("./db").get();
 
-const CHARGE_FREE ="免費", CHARGE_SHARE="均攤(%s)", CHARGE_POCKETMONEY="酬庸(%s)";
-
 /*global UserActivity
 * key: {user_id}_{timpestamp}_{activity_id}
 {
@@ -19,44 +17,32 @@ const CHARGE_FREE ="免費", CHARGE_SHARE="均攤(%s)", CHARGE_POCKETMONEY="酬�
 }
 */
 const gender_desc =['限男', '限女', '不限'];
+const charge_desc =['免費', '均攤(%s)',  '酬庸(%s)'];
+
 module.exports = UserActivity;
 function UserActivity(obj){
     for(var key in obj){
         //利用遞迴的特性把物件的key跟屬性串在一起
         this[key] = obj[key];
+        console.log('%s: %s', key, obj[key]);
     }
-    this.showCharge(function(charge){
-        var output = '『來揪咖吧』'
-        .concat('\r\n').concat('費用：').concat(charge)
-        .concat('\r\n').concat('性別：').concat(gender_desc[this.gender])
+    var charge_str;
+    if(this.charge){
+       charge_str = charge_desc[this.charge.type];
+       if(this.charge.price){
+           charge_str = charge_str.replace('%s', this.charge.price);
+       }
+    }
+    var gender_str = this.gender ? gender_desc[this.gender] : undefined;
+    
+    var output = '『來揪咖吧』'
+        .concat('\r\n').concat('費用：').concat(charge_str)
+        .concat('\r\n').concat('性別：').concat(gender_str)
         .concat('\r\n').concat('類別：').concat(this.type)
         .concat('\r\n').concat('地點：').concat(this.location)
         .concat('\r\n').concat('內容：').concat(this.content);    
-        this['output'] = output;    
-    });
+    this.output = output;
 };
-
-UserActivity.prototype.showCharge = function(fn){
-    var userActivity = this;
-    var charge = userActivity.charge;
-    if(!charge){
-        fn('');
-        return;
-    }
-    switch(charge.type){
-        case 0:
-            fn('免費(Free)');
-            break;
-        case 1:
-            fn('均攤($%s)'.replace('%s', charge.price));
-            break;
-        case 2:
-            fn('零用錢($%s)'.replace('%s', charge.price));
-            break;
-        default:
-            fn('Not defined');
-    }
-}
 
 UserActivity.create = function(user_id, activity_id, activity, fn){
     var useractivity = new UserActivity(activity);
@@ -113,22 +99,4 @@ UserActivity.findAsHost = function(user_id, fn){
         });
         fn(userActivity);
     });
-}
-
-function charegeToString(charge){
-    if(charge){
-        var type = charge.type;
-        var price = charge.price;
-        switch(type){
-            case 0:
-                return CHARGE_FREE;
-            case 1:
-                return CHARGE_SHARE.replace('%s', price);
-            case 2:
-                return CHARGE_POCKETMONEY.replace('%s', price);
-            default:
-                return "";
-        }        
-    }
-    return "";
 }

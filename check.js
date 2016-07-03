@@ -1,6 +1,4 @@
-var reply = require('./reply');
-var command = require('./command');
-var User = require('./model/User');
+var route = require('./route');
 var UserSys = require('./model/UserSys');
 var Sync = require('sync');
 /*
@@ -29,7 +27,7 @@ exports.receivedAuthentication =function(event) {
 
   // When an authentication is received, we'll send a message back to the sender
   // to let them know it was successful.
-  reply.sendTextMessage(senderID, "Authentication successful");
+  route.sendTextMessage(senderID, "Authentication successful");
 }
  
 /*
@@ -63,12 +61,6 @@ exports.receivedMessage = function(event) {
   var messageAttachments = message.attachments;
 
   if (messageText) {
-    
-    //for develop test
-    if(messageText.startsWith('$')){
-      command.postback(senderID, messageText);
-      return;
-    }
     // If we receive a text message, check to see if it matches any special
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
@@ -77,19 +69,19 @@ exports.receivedMessage = function(event) {
       case 'give me a hand':
       case '幫助':
       case '幫忙':
-        reply.helpMessage(senderID);
+        route.helpMessage(senderID);
         break;
       default:
         UserSys.get(senderID, 'field', function(field, err){
           if(err || !field || !field.value){
-            reply.randomMessage(senderID, messageText);
+            route.randomMessage(senderID, messageText);
             return;
           }
-          command.savefield(senderID, field.value, messageText);
+          route.savefield(senderID, field.value, messageText);
         });
     }
   } else if (messageAttachments) {
-    reply.responseAttach(senderID, "Message with attachment received");
+    route.responseAttach(senderID, "Message with attachment received");
   }
 }
 
@@ -141,13 +133,11 @@ exports.receivedPostback = function(event) {
   
   
   //locak same payload in 5 seconds
-  Sync(function(){
       UserSys.setPostback(senderID, payload, function(err){
         if(err){
-          reply.err(err);
+          route.err(err);
           return;
         }
-        command.postback(senderID, payload);
+        route.postback(senderID, payload);
       }); 
-  });
 }

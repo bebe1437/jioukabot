@@ -1,11 +1,26 @@
-var command = require('./command');
+var check = require('./check');
+var route = require("./route");
 var UserSys = require('./model/UserSys');
-var hold = require('./hold');
-var user_id = '1155742751164216';
+const user_id = '1155742751164216';
 
 
-//command.postback(user_id, '$HOLD_CHARGE.POCKETMONEY'); 
-//command.savefield(user_id, "HOLD.CHARGE/PRICE$b63e81a7-dd66-4661-94c0-6466d0cc757a", '2000'); 
-//command.postback(user_id, '$HOLD_CHARGE.FREE');
+//help
+//route.helpMessage(user_id);
 
-hold.editMessage(user_id);
+/*hold
+  var payload = {
+    route: 'hold',
+    action: 'help'
+  }
+
+route.postback(user_id,  payload);
+*/
+
+/*save field
+UserSys.get(user_id, 'field', function(field, err){
+    if(field){
+        var userfield = field.value;
+        route.savefield(user_id, userfield, 'testing saving field');
+    }
+});
+*/

@@ -1,5 +1,6 @@
 var db = require("./db").get();
 var uuid = require('node-uuid');
+var UserActivity = require('./UserActivity')
 
 /*global Activity
 * key: {activity_id}
@@ -49,6 +50,6 @@ Activity.init = function(user_id, fn){
 Activity.findByKey = function(activity_id, fn){
     var ref = db.database().ref("/activities/" + activity_id);
     ref.once('value', function(snapshot){
-        fn(snapshot.exists()? snapshot.val() : null);
+        fn(snapshot.exists()? new Activity(snapshot.val()) : null);
     });
 }

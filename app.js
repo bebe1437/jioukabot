@@ -14,7 +14,8 @@ const
   bodyParser = require('body-parser'),
   config = require('config'),
   crypto = require('crypto'),
-  express = require('express');
+  express = require('express'),
+  Sync = require("sync");
   
 var check = require('./check');
 var reply = require('./reply');
@@ -100,7 +101,9 @@ app.post('/webhook', function (req, res) {
             } else if (messagingEvent.delivery) {
               check.receivedDeliveryConfirmation(messagingEvent);
             } else if (messagingEvent.postback) {
-              check.receivedPostback(messagingEvent);
+                Sync(function(){
+                  check.receivedPostback(messagingEvent);
+                });
             } else {
               console.log("Webhook received unknown messagingEvent: ", messagingEvent);
             }            

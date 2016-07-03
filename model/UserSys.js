@@ -80,3 +80,13 @@ UserSys.setField = function(user_id, value, fn){
 UserSys.cleanField = function(user_id, fn){
     this.setField(user_id, '', fn);
 }
+
+UserSys.setResponse = function(user_id, value, fn){
+    this.set(user_id, 'response', value, function(err){
+        fn(err);
+    });
+}
+
+UserSys.getResponse = function(user_id, fn){
+    this.setResponse(user_id, '', fn);
+}
