@@ -1,0 +1,11 @@
+{
+    "appSecret": "07a6c713dcf7bac0bd56a11051968e6b",
+    "pageAccessToken": "EAAVZBUBZC3eZCoBAELZAYX2r8mZBbRxCrq5PGZAXBh04bR7giqLbamWtMAb2kieXaapvGSRdlZBpBZAJlJeCcHheCWaE32aLCU8FqktwnIYNbZCyrAriUIyTWCU0lG5caxVq9Crv8b4mrKxniv0IqhI8ZC6sxAQbOQwYTsZBAZACWnC4rAZDZD",
+    "validationToken": "03030502",
+    "firebase":{
+        "apiKey": "AIzaSyAIYq-7-dbU8hmK6nP6Xg_S80omckvl2DY",
+        "authDomain": "jioukabot.firebaseapp.com",
+        "databaseURL": "https://jioukabot.firebaseio.com",
+        "storageBucket": "jioukabot.appspot.com"
+    }
+}

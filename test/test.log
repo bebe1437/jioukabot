@@ -1,0 +1,20 @@
+===route.postback:{"route":"hold","action":"charge","response":{"key":"53a5d64b-6da1-431f-87d9-2a9f5ee2e6f4","value":"0","next":"show"}}==
+db.update:{"/activities/53a5d64b-6da1-431f-87d9-2a9f5ee2e6f4/charge/type":"0","/useractivites/1155742751164216_1467565501980_53a5d64b-6da1-431f-87d9-2a9f5ee2e6f4/charge/type":"0"}
+===save charge type:0===
+===next:show===
+charge: [object Object]
+content: testing saving field
+created_time: 1467565501980
+gender: 0
+host: 1155742751164216
+location: testing saving field
+status: 0
+type: testing saving field
+activity_id: 53a5d64b-6da1-431f-87d9-2a9f5ee2e6f4
+===show:『來揪咖吧』
+費用：免費
+性別：限男
+類別：testing saving field
+地點：testing saving field
+內容：testing saving field===
+Successfully sent generic message with id mid.1467568220825:dd1aa97164fd487172 to recipient 1155742751164216
