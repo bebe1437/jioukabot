@@ -24,7 +24,6 @@ function UserActivity(obj){
     for(var key in obj){
         //利用遞迴的特性把物件的key跟屬性串在一起
         this[key] = obj[key];
-        console.log('%s: %s', key, obj[key]);
     }
     var charge_str;
     if(this.charge){
