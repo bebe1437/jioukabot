@@ -93,6 +93,7 @@ exports.savefield = function(recipientId, tmpfield, message){
         hold.createField(recipientId, next);
         return;
       }
+      Update.holdUserField(recipientId, "");
       UserActivity.findByKey(recipientId, activity_id, function(userActivity){
               hold.showMessage(recipientId, userActivity);
       });
