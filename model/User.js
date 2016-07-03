@@ -9,8 +9,7 @@ var fbapi = require('../fbapi');
    "profile_pic": "https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/943815_1590926874501601_4115396103879685023_n.jpg?oh=2790f47c957a77b4960c2a9953e40ec3&oe=5802BCA7",
    "locale": "zh_TW",
    "timezone": 8,
-   "gender": "female",
-   field: reply to save
+   "gender": "female"
 }
 */
 module.exports = User;
@@ -73,15 +72,5 @@ User.valid = function(fbUserID, fn){
         create(fbUserID, function(user, err){
             fn(user, err);
         }); 
-    });
-}
-
-User.currentField = function(user_id, fn){
-    find(user_id, function(user, err){
-        if(err){
-            fn(null, err);
-        }else{
-            fn(user.field);
-        }
     });
 }

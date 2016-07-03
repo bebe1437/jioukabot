@@ -70,3 +70,9 @@ UserSys.setPostback = function(user_id, value, fn){
         });
     });
 }
+
+UserSys.setField = function(user_id, value, fn){
+    this.set(user_id, 'field', value, function(err){
+        fn(err);
+    });
+}

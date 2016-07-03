@@ -95,3 +95,23 @@ exports.helpMessage = function(recipientId){
 
   this.callSendAPI(messageData);    
 }
+
+exports.sendButtonMessage = function(recipientId, text, buttons){
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: text,
+          buttons: buttons
+        }
+      }
+    }
+  };  
+
+  this.callSendAPI(messageData);
+}

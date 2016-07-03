@@ -1,6 +1,7 @@
 var reply = require('./reply');
 var Update = require('./model/Update');
 var Activity = require('./model/Activity');
+var UserSys = require('./model/UserSys');
 var UserActivity = require('./model/UserActivity');
 var User = require('./model/User');
 
@@ -93,9 +94,15 @@ exports.savefield = function(recipientId, tmpfield, message){
         hold.createField(recipientId, next);
         return;
       }
-      Update.holdUserField(recipientId, "");
-      UserActivity.findByKey(recipientId, activity_id, function(userActivity){
+      //Update.holdUserField(recipientId, "");
+      UserSys.setField(recipientId, '', function(err){
+        if(err){
+          reply.err(recipientId, err);
+          return;
+        }
+        UserActivity.findByKey(recipientId, activity_id, function(userActivity){
               hold.showMessage(recipientId, userActivity);
+        });
       });
     });    
   });
@@ -195,11 +202,12 @@ exports.showMessage = function(recipientId, userActivity){
 function fieldMessage(recipientId, messageText, userfield){
   console.log('===hold.fieldMessage===');
   console.log('user.field:%s', userfield);
-  Update.holdUserField(recipientId, userfield);
-  User.currentField(recipientId, function(field, err){
-    if(field == userfield){
-      reply.sendTextMessage(recipientId, messageText);
+  UserSys.setField(recipientId, userfield, function(err){
+    if(err){
+      reply.err(recipientId, err);
+      return;
     }
+    reply.sendTextMessage(recipientId, messageText);
   });
 }
 
@@ -234,6 +242,31 @@ exports.chargeMessage = function(recipientId){
       }
     }
   };  
-  Update.holdUserField(recipientId, "");
-  reply.callSendAPI(messageData);
+  //Update.holdUserField(recipientId, "");
+  UserSys.setField(recipientId, '', function(err){
+    if(err){
+      reply.err(recipientId, err);
+      return;
+    }
+    reply.callSendAPI(messageData);
+  });
+}
+
+exports.editMessage = function(recipientId) {
+  UserActivity.findAsHost(recipientId, function(userActivity){
+    userActivity.showCharge(function(str){
+    var content = '『來揪咖吧』'
+    .concat('\r\n').concat('費用：').concat(str)
+    .concat('\r\n').concat('類別：').concat(userActivity.type)
+    .concat('\r\n').concat('地點：').concat(userActivity.location)
+    .concat('\r\n').concat('內容：').concat(userActivity.content); 
+    
+    var activity_id = userActivity.activity_id;
+    reply.sendButtonMessage(recipientId, content, [
+      {type:'postback', title:'編輯揪咖', payload:'$HOLD_EDIT$'+activity_id},
+      {type:'postback', title:'停止配對', payload:'$HOLD_STOP$'+activity_id},
+      {type:'postback', title:'取消揪咖', payload:'$HOLD_CANCEL$'+activity_id}
+      ]);
+    }); 
+  });
 }

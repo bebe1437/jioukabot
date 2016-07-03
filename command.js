@@ -7,7 +7,7 @@ exports.postback = function(recipientId, command){
     case '$HOLD':
         UserActivity.findAsHost(recipientId, function(userActivity){
             userActivity 
-            ? hold.showMessage(recipientId, userActivity)
+            ? hold.editMessage(recipientId, userActivity)
             : hold.createField(recipientId, 'CONTENT');
         });
         break;

@@ -79,12 +79,12 @@ exports.receivedMessage = function(event) {
         reply.helpMessage(senderID);
         break;
       default:
-        User.currentField(senderID, function(field, err){
+        UserSys.get(senderID, 'field', function(field, err){
           if(err || !field){
-             reply.sendTextMessage(senderID, messageText);
-          }else{
-             command.savefield(senderID, field, messageText);         
+            reply.sendTextMessage(senderID, messageText);
+            return;
           }
+          command.savefield(senderID, field, messageText);
         });
     }
   } else if (messageAttachments) {
