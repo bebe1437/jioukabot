@@ -187,7 +187,7 @@ exports.saveGenderField = function(recipientId, gender){
     var hold = this;
     
     var sex;
-    siwtch(gender.toLowerCase()){
+    switch(gender.toLowerCase()){
       case 'all':
         sex = 2;
         break;
@@ -196,7 +196,7 @@ exports.saveGenderField = function(recipientId, gender){
         break;
       case 'male':
         sex = 0;
-        break:
+        break;
       default:
         reply.err(recipientId, 'Undefined gender:%s', gender);
         return;
