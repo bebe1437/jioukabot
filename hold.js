@@ -53,6 +53,9 @@ exports.createField = function(recipientId, type) {
         case 'LOCATION':
             message = "給個大概位置吧？城市名稱";
             break;
+        case 'GENDER':
+            hold.genderMessage(recipientId);
+            return;
         case 'CHARGE':
             hold.chargeMessage(recipientId);
             return;
@@ -118,8 +121,10 @@ function save(recipientId, activity_id, field, field_value, fn){
       fn('LOCATION');
       break;
     case 'LOCATION':
-      fn('CHARGE');
+      fn('GENDER');
       break;
+    case 'GENDER':
+      fn('CHARGE');
     case 'CHARGE/TYPE':
       fn('CHARGE/PRICE');
       break;
@@ -171,6 +176,40 @@ exports.saveChargeField = function(recipientId, charge){
   });
 }
 
+exports.saveGenderField = function(recipientId, gender){
+  console.log('===hold.saveGenderField:%s===', gender)
+  var hold = this;
+  initActivity(recipientId, function(activity_id, err){
+    if(err){
+      reply.err(recipientId, err);
+      return;
+    }
+    var hold = this;
+    
+    var sex;
+    siwtch(gender.toLowerCase()){
+      case 'all':
+        sex = 2;
+        break;
+      case 'female':
+        sex = 1;
+        break;
+      case 'male':
+        sex = 0;
+        break:
+      default:
+        reply.err(recipientId, 'Undefined gender:%s', gender);
+        return;
+    }
+    save(recipientId, activity_id, 'gender', sex, function(err){
+      if(err){
+        reply.err(recipientId, err);
+        return;
+      }
+      hold.createField(recipientId, 'CHARGE');
+    });
+  });
+}
 /*
  * [揪咖]
 費用：免費、均攤、佣金
@@ -251,6 +290,47 @@ exports.chargeMessage = function(recipientId){
     reply.callSendAPI(messageData);
   });
 }
+
+/*
+ * show gender message
+*/
+exports.genderMessage = function(recipientId){
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "有指定配對性向嗎？",
+          buttons:[{
+            type: "postback",
+            title: "限男",
+            payload: "$HOLD_GENDER.MALE"
+          },{
+            type: "postback",
+            title: "限女",
+            payload: "$HOLD_GENDER.FEMALE"
+          },{
+            type: "postback",
+            title: "不限",
+            payload: "$HOLD_GENDER.ALL"
+          }]
+        }
+      }
+    }
+  };
+  UserSys.setField(recipientId, '', function(err){
+    if(err){
+      reply.err(recipientId, err);
+      return;
+    }
+    reply.callSendAPI(messageData);
+  });
+}
+
 
 exports.editMessage = function(recipientId) {
   UserActivity.findAsHost(recipientId, function(userActivity){

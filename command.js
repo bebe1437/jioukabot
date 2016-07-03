@@ -17,6 +17,12 @@ exports.postback = function(recipientId, command){
         var charge = command.split('_')[1].split('.')[1];
         hold.saveChargeField(recipientId, charge);
         break;
+    case '$HOLD_GENDER.ALL':
+    case '$HOLD_GENDER.MALE':
+    case '$HOLD_GENDER.FEMALE':
+        var gender = command.split('_')[1].split('.')[1];
+        hold.saveGenderField(recipientId, gender);
+        break;
     default:
         console.log('Not valid command:'+ command);
         reply.err(recipientId);
