@@ -184,7 +184,6 @@ exports.saveGenderField = function(recipientId, gender){
       reply.err(recipientId, err);
       return;
     }
-    var hold = this;
     
     var sex;
     switch(gender.toLowerCase()){
