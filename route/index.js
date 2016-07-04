@@ -2,7 +2,8 @@ var UserSys = require('../model/UserSys');
 var api = require('./api');
 
 const routes={
-  hold: require('./hold')
+  hold: require('./hold'),
+  match: require("./match")
 }
 
 /*

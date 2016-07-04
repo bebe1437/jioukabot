@@ -13,23 +13,16 @@ var UserPrefer = require("../../model/UserPrefer");
 * help
 **/
 exports.process = function(recipientId, response){
+    var help = this;
     UserPrefer.find(recipientId, function(userPrefer){
         if(!userPrefer){
             route.err(recipientId, 'Can not find UserPrefer:'+recipientId);
             return;
         }
         User.valid(recipientId, function(user){
-            
+          help.editMessage(recipientId, user.first_name, userPrefer);
         });
         
-    });
-}
-
-exports.createMessage = function(recipientId){
-    Activity.init(recipientId, function(activity_id, activity, err){
-        UserActivity.create(recipientId, activity_id, activity, function(useractivity, err){
-           main.requireField(recipientId, activity_id, 'content', 'type.location.gender.charge.show'); 
-        });
     });
 }
 
