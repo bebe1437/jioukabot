@@ -42,6 +42,7 @@ UserPrefer.init = function(user_id, user, fn){
         gender: 2,
         charge: 2,
         locale: user.locale,
+        status: 1,
         updated_time: Date.now()        
     }, fn);
 }
