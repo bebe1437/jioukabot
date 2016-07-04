@@ -1,63 +1,24 @@
-var route = require("../index");
-var main = require("./index");
-var UserActivity = require("../../model/UserActivity");
-var Activity = require("../../model/Activity");
-var User = require("../../model/User");
-var Payload = require("../Payload");
-var api = require("../api");
+var route = require('./route');
+var api = require('./route/api');
+var Payload = require('./route/Payload');
+var constants = require("./constants");
+var UserActivity = require("./model/UserActivity");
+const user_id = '1155742751164216';
 
-/*
-* help
-**/
-exports.process = function(recipientId, response){
-    var help = this;
-    UserActivity.findAsHost(recipientId, function(userActivity){
-        userActivity 
-        ? User.valid(recipientId, function(user){
-            console.log(JSON.stringify(user));
-            help.editMessage(recipientId, user.first_name,  userActivity)
-        })
-        : help.createMessage(recipientId);
-    });
-}
+UserActivity.findAsHost(user_id,  function(userActivity){
+  editMessage(user_id, 'Phoebe', userActivity);
+  
+});
 
-exports.createMessage = function(recipientId){
-    Activity.init(recipientId, function(activity_id, activity, err){
-        UserActivity.create(recipientId, activity_id, activity, function(useractivity, err){
-           main.requireField(recipientId, activity_id, 'content', 'type.location.gender.charge.show'); 
-        });
-    });
-}
-
-/*
-exports.editMessage = function(recipientId, userActivity) {
-    var payload = {
-        route: 'hold',
-        action: '{value}',
-        response:{
-            key: userActivity.activity_id
-        }
-    }
-    payload = JSON.stringify(payload);
-    
-    var content =  "哈囉！這是你的揪咖活動內容：\r\n".concat(userActivity.output);
-    var buttons = [
-        { type: 'postback', title: '編輯揪咖', payload: payload.replace('{value}', 'edit')},
-        { type: 'postback', title: '停止配對', payload: payload.replace('{value}', 'stopmatch')}
-    ];
-    route.sendButtonMessage(recipientId, content, buttons);
-}
-*/
-
-exports.editMessage = function(recipientId, user_name, userActivity) {
+function editMessage(recipientId, user_name, userActivity) {
   var content = user_name.concat(", 以下是你目前的揪咖內容：\r\n").concat(userActivity.output);
   var activity_id = userActivity.activity_id;
   var next = 'edit';
   
-  route.sendTextMessage(recipientId, content, function(){
+  route.sendTextMessage(user_id, content, function(){
        var main = {
         title: "設定",
-        subtitle: "每人一次只能揪一個活動喔！",
+        subtitle: userActivity.charge_output,
         buttons:[{ type: "postback", title: "停止配對", payload:"test"}
         ,{ type: "postback", title: "取消揪咖", payload:"test"}]
         }

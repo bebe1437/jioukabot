@@ -15,7 +15,7 @@ if(!constants.pageAccessToken
  * get the message id in a response 
  *
  */
-exports.sendMessage = function(messageData) {
+exports.sendMessage = function(messageData, callback) {
   request({
     uri: constants.api.sendMessage,
     qs: { access_token: constants.pageAccessToken },
@@ -29,6 +29,10 @@ exports.sendMessage = function(messageData) {
 
       console.log("Successfully sent generic message with id %s to recipient %s", 
         messageId, recipientId);
+      
+      if(callback){
+        callback();
+      }
     } else {
       console.error("Unable to send message.");
       console.error(response);
@@ -56,6 +60,6 @@ exports.userprofile = function(user_id, fn){
     method: 'GET'
 
   }, function (error, response, body) {
-      fn(body, error);
+      fn(JSON.parse(body), error);
   });  
 }

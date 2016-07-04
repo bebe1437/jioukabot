@@ -90,7 +90,7 @@ exports.responseAttach = function(recipientId){
  * Send a text message using the Send API.
  *
  */
-exports.sendTextMessage = function(recipientId, messageText) {
+exports.sendTextMessage = function(recipientId, messageText, callback) {
   var messageData = {
     recipient: {
       id: recipientId
@@ -99,7 +99,7 @@ exports.sendTextMessage = function(recipientId, messageText) {
       text: messageText
     }
   };
-  api.sendMessage(messageData);  
+  api.sendMessage(messageData, callback);  
 }
 
 /*

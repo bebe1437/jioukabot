@@ -1,6 +1,5 @@
 var db = require("./db").get();
 var uuid = require('node-uuid');
-var UserActivity = require('./UserActivity')
 
 /*global Activity
 * key: {activity_id}

@@ -25,18 +25,16 @@ function UserActivity(obj){
         //利用遞迴的特性把物件的key跟屬性串在一起
         this[key] = obj[key];
     }
-    var charge_str;
     if(this.charge){
-       charge_str = charge_desc[this.charge.type];
+       this.charge_output = charge_desc[this.charge.type];
        if(this.charge.price){
-           charge_str = charge_str.replace('%s', this.charge.price);
+           this.charge_output = this.charge_output.replace('%s', this.charge.price);
        }
     }
-    var gender_str = this.gender ? gender_desc[this.gender] : undefined;
+    this.gender_output = this.gender ? gender_desc[this.gender] : undefined;
     
-    var output = '『來揪咖吧』'
-        .concat('\r\n').concat('費用：').concat(charge_str)
-        .concat('\r\n').concat('性別：').concat(gender_str)
+    var output = '費用：'.concat(this.charge_output)
+        .concat('\r\n').concat('性別：').concat(this.gender_output)
         .concat('\r\n').concat('類別：').concat(this.type)
         .concat('\r\n').concat('地點：').concat(this.location)
         .concat('\r\n').concat('內容：').concat(this.content);    

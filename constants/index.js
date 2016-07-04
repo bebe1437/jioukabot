@@ -30,3 +30,19 @@ if (!(this.api && this.appSecret && this.validationToken && this.pageAccessToken
     console.log('===pageAccessToken：%s===', this.pageAccessToken);  
     process.exit(1);
 }
+
+/**payload */
+
+define("payload",{
+    hold:{
+        charge: {
+            route: 'hold',
+            action: 'charge',
+            response: {
+              key: '{activity_id}',
+              value: '{value}',
+              next: '{next}'
+            }
+        }
+    }
+})

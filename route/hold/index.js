@@ -1,8 +1,10 @@
+var Payload = require('../Payload');
 var route = require("../index");
 var db = require("../../model/db").get();
 var Activity = require("../../model/Activity");
 var UserActivity = require("../../model/UserActivity");
 var UserSys = require("../../model/UserSys");
+var User = require("../../model/User");
 var help = require("./help");
 
 const routes = {
@@ -29,11 +31,13 @@ exports.next = function(action, recipientId, value, activity, next){
           route.err(recipientId, err);
           return;
         }
-        help.editMessage(recipientId, activity);
+        User.valid(recipientId, function(user){
+          help.editMessage(recipientId, user.first_name, new UserActivity(activity));
+        });
       });
       break;
     case 'show':
-      var message = new UserActivity(activity).output;
+      var message = "哈囉！這是你的揪咖活動內容：\r\n".concat(new UserActivity(activity).output);
       UserSys.cleanField(recipientId, function(err){
         if(err){
           route.err(recipientId, err);
@@ -112,16 +116,6 @@ exports.requireField = function(recipientId, activity_id, field, next) {
  * show gender message
 */
 exports.genderMessage = function(recipientId, activity_id, next){
-  var payload ={
-    route: 'hold',
-    action: 'gender',
-    response:{
-      key: activity_id,
-      value: '{value}',
-      next: next
-    }
-  };
-  payload = JSON.stringify(payload);
   
   var messageData = {
     recipient: {
@@ -136,15 +130,15 @@ exports.genderMessage = function(recipientId, activity_id, next){
           buttons:[{
             type: "postback",
             title: "限男",
-            payload: payload.replace('{value}', 0)
+            payload: Payload.gender(activity_id, 0, next).output
           },{
             type: "postback",
             title: "限女",
-            payload: payload.replace('{value}', 1)
+            payload: Payload.gender(activity_id, 1, next).output
           },{
             type: "postback",
             title: "不限",
-            payload: payload.replace('{value}', 2)
+            payload: Payload.gender(activity_id, 2, next).output
           }]
         }
       }
@@ -160,17 +154,6 @@ exports.genderMessage = function(recipientId, activity_id, next){
 */
 exports.chargeMessage = function(recipientId, activity_id, next){
   
-  var payload ={
-    route: 'hold',
-    action: 'charge',
-    response: {
-      key: activity_id,
-      value: '{value}',
-      next: next
-    }
-  };
-  payload = JSON.stringify(payload);
-  
   var messageData = {
     recipient: {
       id: recipientId
@@ -184,15 +167,15 @@ exports.chargeMessage = function(recipientId, activity_id, next){
           buttons:[{
             type: "postback",
             title: "免費",
-            payload: payload.replace('{value}', 0)
+            payload: Payload.charge(activity_id, 0, next).output
           },{
             type: "postback",
             title: "均攤",
-            payload: payload.replace('{value}', 1)
+            payload: Payload.charge(activity_id, 1, next).output
           },{
             type: "postback",
             title: "零用錢",
-            payload: payload.replace('{value}', 2)
+            payload: Payload.charge(activity_id, 2, next).output
           }]
         }
       }
