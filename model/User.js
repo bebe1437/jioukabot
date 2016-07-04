@@ -35,9 +35,8 @@ function create(fbUserID, fn){
                 fn(null, err);
                 return;
             }
-            var user = new User(userprofile);
-            console.log('User.find:%s', user);
-            fn(user);
+            
+            fn(new User(userprofile));
         }); 
     });
 }

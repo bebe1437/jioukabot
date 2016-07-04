@@ -31,7 +31,9 @@ function UserActivity(obj){
            this.charge_output = this.charge_output.replace('%s', this.charge.price);
        }
     }
-    this.gender_output = this.gender ? gender_desc[this.gender] : undefined;
+    if(this.gender){
+        this.gender_output = gender_desc[this.gender];
+    }
     
     var output = '費用：'.concat(this.charge_output)
         .concat('\r\n').concat('性別：').concat(this.gender_output)
