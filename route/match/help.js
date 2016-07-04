@@ -1,7 +1,4 @@
 var route = require("../index");
-var main = require("./index");
-var UserActivity = require("../../model/UserActivity");
-var Activity = require("../../model/Activity");
 var User = require("../../model/User");
 var Payload = require("../Payload");
 var api = require("../api");

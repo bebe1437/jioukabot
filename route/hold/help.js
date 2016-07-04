@@ -35,13 +35,16 @@ exports.editMessage = function(recipientId, user_name, userActivity) {
   var next = 'edit';
   
   route.sendTextMessage(recipientId, content, function(){
-       var main = {
+     var main = {
         title: "設定",
         subtitle: "每人一次只能揪一個活動喔！",
-        buttons:[{ type: "postback", title: userActivity.status == 0 ? "停止配對":"開啟配對"
-            , payload: Payload.holdstatus(activity_id, userActivity.status == 0 ? 2:0 , next).output}
-        ,{ type: "postback", title: "取消揪咖", payload: Payload.holdstatus(activity_id, 1).output}]
-        }
+        buttons:[
+            { type: "postback", title: "參咖列表", payload: Payload.holdattend(activity_id).output},
+            { type: "postback", title: userActivity.status == 0 ? "停止配對":"開啟配對"
+            , payload: Payload.holdstatus(activity_id, userActivity.status == 0 ? 2:0 , next).output},
+            { type: "postback", title: "取消揪咖", payload: Payload.holdstatus(activity_id, 1).output}
+        ]
+    }
 
       var charge = {
         title: "費用",

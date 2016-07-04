@@ -36,6 +36,10 @@ Payload.holdstatus = function(activity_id, value,  next){
     return new Payload(init('hold', 'status', activity_id, value , next));
 }
 
+Payload.holdattend = function(activity_id){
+    return new Payload(init('hold', 'attend', activity_id));
+}
+
 Payload.matchtatus = function(value,  next){
     return new Payload(init('match', 'status', '', value , next));
 }

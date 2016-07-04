@@ -12,7 +12,8 @@ const routes = {
   charge: require("./charge"),
   gender: require("./gender"),
   field: require("./field"),
-  status: require('./status')
+  status: require('./status'),
+  attend: require("./attend")
 }
 /*
  * payload:{
