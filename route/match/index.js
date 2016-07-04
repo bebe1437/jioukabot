@@ -5,7 +5,10 @@ var help = require("./help");
 var route = require("../index");
 
 const routes = {
-  help: require("./help")
+  help: require("./help"),
+  charge: require("./charge"),
+  gender: require("./gender"),
+  status: require("./status")
 }
 /*
  * payload:{
