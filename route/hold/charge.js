@@ -19,13 +19,13 @@ exports.process = function(recipientId, response){
         console.log('===save charge type:%s===', value);
         console.log('===next:%s===', next);
         switch(value){
-            case '0':
+            case 0:
                 route.parsenext(next, function(nextaction, nextleft){
                     main.next(nextaction, recipientId, value, activity, nextleft);
                 });
                 break;
-            case '1':
-            case '2':
+            case 1:
+            case 2:
                 main.requireField(recipientId, activity_id, 'charge/price', next);
                 break;
             default:
