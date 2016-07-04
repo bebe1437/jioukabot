@@ -18,6 +18,7 @@ exports.process = function(recipientId, response){
     main.save(recipientId, activity_id, 'status', value, function(recipientId, value, activity){
         switch(value){
             case 0:
+                route.sendTextMessage(recipientId, '已經幫你開啟配對囉XD');
                 break;
             case 1:
                 route.sendTextMessage(recipientId, '已經幫你取消揪團囉QQ(在地畫圈圈...)');
