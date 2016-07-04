@@ -31,7 +31,7 @@ function UserActivity(obj){
            this.charge_output = this.charge_output.replace('%s', this.charge.price);
        }
     }
-    if(this.gender){
+    if(this.gender || this.gender == 0){
         this.gender_output = gender_desc[this.gender];
     }
     
