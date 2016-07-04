@@ -131,6 +131,10 @@ exports.helpMessage = function(recipientId){
             type: "postback",
             title: "參咖",
             payload: payload.replace('{value}', 'attend')
+          },{
+            type: "postback",
+            title: "配對設定",
+            payload: payload.replace('{value}', 'match')
           }]
         }
       }

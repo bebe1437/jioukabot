@@ -1,5 +1,6 @@
 var db = require("./db").get();
 var api = require('../route/api');
+var UserPrefer = require('./UserPrefer');
 
 /*global User
 *  key:{user_id}
@@ -9,7 +10,7 @@ var api = require('../route/api');
    "profile_pic": "https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/943815_1590926874501601_4115396103879685023_n.jpg?oh=2790f47c957a77b4960c2a9953e40ec3&oe=5802BCA7",
    "locale": "zh_TW",
    "timezone": 8,
-   "gender": "female"
+   "gender": 0-male, 1-female
 }
 */
 module.exports = User;
@@ -29,6 +30,7 @@ function create(fbUserID, fn){
             return;
         }
         var ref = db.database().ref("/users/"+fbUserID);
+        userprofile.gender = userprofile.gender == 'female' ? 1 : 0;
         ref.set(userprofile, function(err){
             if(err){
                 console.log('Fail to create User:%s', fbUserID);
@@ -59,15 +61,17 @@ function find(fbUserID, fn){
 /*
  * return: user
 */
-User.valid = function(fbUserID, fn){
+User.valid = function(user_id, fn){
     console.log('===Validating user====');
-    find(fbUserID, function(user, err){
+    find(user_id, function(user, err){
         if(user){
             fn(user, err);
             return;
         }
-        create(fbUserID, function(user, err){
-            fn(user, err);
+        create(user_id, function(user, err){
+            UserPrefer.init(user_id, user, function(err){
+                fn(user, err);
+            });
         }); 
     });
 }

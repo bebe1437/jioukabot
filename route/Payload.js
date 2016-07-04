@@ -35,3 +35,15 @@ Payload.holdfield = function(activity_id, value, next){
 Payload.holdstatus = function(activity_id, value,  next){
     return new Payload(init('hold', 'status', activity_id, value , next));
 }
+
+Payload.matchtatus = function(value,  next){
+    return new Payload(init('match', 'status', '', value , next));
+}
+
+Payload.matchgender = function(value, next){
+    return new Payload(init('match', 'gender', '', value, next));
+}
+
+Payload.matchcharge = function(value, next){
+    return new Payload(init('match', 'charge', '', value , next));
+}

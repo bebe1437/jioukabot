@@ -1,37 +1,13 @@
-var route = require('./route');
-var UserActivity = require("./model/UserActivity");
+var help = require('./route/match/help');
+var User = require("./model/User");
+var UserPrefer = require("./model/UserPrefer");
 const user_id = '1155742751164216';
 
-UserActivity.findAsHost(user_id, function(useractivity){
-  route.sendTextMessage(user_id, useractivity.output);
-  var buttons = [{
-              type: "postback",
-              title: "免費",
-              payload: "Developer defined postback"
-            }, {
-              type: "postback",
-              title: "均攤",
-              payload: "Developer defined postback"
-            }, {
-              type: "postback",
-              title: "零用錢",
-              payload: "Developer defined postback"
-            }];
-            
-  route.sendButtonMessage(user_id, "費用: 免費", buttons);
-  buttons = [{
-              type: "postback",
-              title: "限男",
-              payload: "Developer defined postback"
-            }, {
-              type: "postback",
-              title: "限女",
-              payload: "Developer defined postback"
-            }, {
-              type: "postback",
-              title: "不限",
-              payload: "Developer defined postback"
-            }];
-            
-  route.sendButtonMessage(user_id, "性別: 限女", buttons);  
+
+User.valid(user_id, function(user){
+  var user_name = user.first_name;
+  UserPrefer.find(user_id, function(userPrefer){
+    help.editMessage(user_id, user_name, userPrefer);
+  });
 });
+

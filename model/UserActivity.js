@@ -78,7 +78,7 @@ UserActivity.findAsHost = function(user_id, fn){
     var ref = db.database().ref("/useractivites");
     ref.orderByKey()
     .startAt(user_id)
-    .once('value', function(snapshots){;
+    .once('value', function(snapshots){
         if(!snapshots.exists()){
             fn(null);
             return;
