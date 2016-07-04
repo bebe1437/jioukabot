@@ -2,7 +2,7 @@ var route = require("../index");
 var db = require("../../model/db").get();
 var Activity = require("../../model/Activity");
 var UserActivity = require("../../model/UserActivity");
-var UserSyc = require("../../model/UserSyc");
+var UserSys = require("../../model/UserSys");
 var help = require("./help");
 
 const routes = {
@@ -24,7 +24,7 @@ exports.process = function(recipientId, payload){
 exports.next = function(action, recipientId, value, activity, next){
   switch(action){
     case 'edit':
-      UserSyc.cleanField(recipientId, function(err){
+      UserSys.cleanField(recipientId, function(err){
         if(err){
           route.err(recipientId, err);
           return;
@@ -34,7 +34,7 @@ exports.next = function(action, recipientId, value, activity, next){
       break;
     case 'show':
       var message = new UserActivity(activity).output;
-      UserSyc.cleanField(recipientId, function(err){
+      UserSys.cleanField(recipientId, function(err){
         if(err){
           route.err(recipientId, err);
           return;
