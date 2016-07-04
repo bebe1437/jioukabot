@@ -17,7 +17,7 @@ var db = require("./db").get();
 }
 */
 const gender_desc =['限男', '限女', '不限'];
-const charge_desc =['免費', '均攤(%s)',  '酬庸(%s)'];
+const charge_desc =['免費', '均攤($%s)',  '零用錢($%s)'];
 
 module.exports = UserActivity;
 function UserActivity(obj){

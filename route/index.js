@@ -1,7 +1,5 @@
-var request = require('request');
-var config = require('config');
-var PAGE_ACCESS_TOKEN = config.get('pageAccessToken');
 var UserSys = require('../model/UserSys');
+var api = require('./api');
 
 const routes={
   hold: require('./hold')
@@ -58,7 +56,7 @@ exports.postback = function(recipientId, payload){
  *
  */
 exports.err = function(recipientId, err){
-  console.log('Invalid Operation[%s]:%s',recipientId, err);
+  console.error('Invalid Operation[%s]:%s',recipientId, err);
   this.sendTextMessage(recipientId, "Invalid Operation"); 
 } 
 
@@ -67,7 +65,7 @@ exports.err = function(recipientId, err){
  *
  */
 exports.invalidUser = function(recipientId, err){
-  console.log('Invalid User[%s]:%s',recipientId, err);
+  console.error('Invalid User[%s]:%s',recipientId, err);
   this.sendTextMessage(recipientId, "Invalid User, we got problem to retrive your user information."); 
 } 
 
@@ -87,32 +85,6 @@ exports.randomMessage = function(recipientId, messageText){
 exports.responseAttach = function(recipientId){
   this.sendTextMessage(recipientId, '喔! 我收到囉^_^'); 
 }
-/*
- * Call the Send API. The message data goes in the body. If successful, we'll 
- * get the message id in a response 
- *
- */
-exports.callSendAPI = function(messageData) {
-  request({
-    uri: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: { access_token: PAGE_ACCESS_TOKEN },
-    method: 'POST',
-    json: messageData
-
-  }, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var recipientId = body.recipient_id;
-      var messageId = body.message_id;
-
-      console.log("Successfully sent generic message with id %s to recipient %s", 
-        messageId, recipientId);
-    } else {
-      console.error("Unable to send message.");
-      console.error(response);
-      console.error(error);
-    }
-  });  
-}
 
 /*
  * Send a text message using the Send API.
@@ -127,7 +99,7 @@ exports.sendTextMessage = function(recipientId, messageText) {
       text: messageText
     }
   };
-  this.callSendAPI(messageData);  
+  api.sendMessage(messageData);  
 }
 
 /*
@@ -165,7 +137,7 @@ exports.helpMessage = function(recipientId){
     }
   };  
 
-  this.callSendAPI(messageData);    
+  api.sendMessage(messageData);    
 }
 
 exports.sendButtonMessage = function(recipientId, text, buttons){
@@ -185,7 +157,7 @@ exports.sendButtonMessage = function(recipientId, text, buttons){
     }
   };  
 
-  this.callSendAPI(messageData);
+  api.sendMessage(messageData);
 }
 
 /*
@@ -209,6 +181,6 @@ exports.cleanFieldMessage = function(recipientId, messageData){
       route.err(recipientId, err);
       return;
     }
-    route.callSendAPI(messageData);
+    api.sendMessage(messageData);
   });  
 }

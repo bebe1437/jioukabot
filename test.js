@@ -1,26 +1,18 @@
-var check = require('./check');
-var route = require("./route");
-var UserSys = require('./model/UserSys');
+var request = require('request');
+var constants = require('./constants');
 const user_id = '1155742751164216';
 
+  request({
+    uri: constants.api.userprofile.replace('{USER_ID}', user_id),
+    qs: { fields: "first_name,last_name,profile_pic,locale,timezone,gender", access_token: constants.pageAccessToken},
+    method: 'GET'
 
-//help
-//route.helpMessage(user_id);
-
-/*hold
-  var payload = {
-    route: 'hold',
-    action: 'help'
-  }
-
-route.postback(user_id,  payload);
-*/
-
-/*save field
-UserSys.get(user_id, 'field', function(field, err){
-    if(field){
-        var userfield = field.value;
-        route.savefield(user_id, userfield, 'testing saving field');
+  }, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      console.log(body);
+    } else {
+      console.error("Unable to send message.");
+      console.error(response);
+      //console.error(error);
     }
-});
-*/
+  });  

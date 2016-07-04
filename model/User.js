@@ -1,5 +1,5 @@
 var db = require("./db").get();
-var fbapi = require('../fbapi');
+var api = require('../route/api');
 
 /*global User
 *  key:{user_id}
@@ -22,7 +22,7 @@ function User(obj){
 
 function create(fbUserID, fn){
     console.log('===User.create===');
-    fbapi.userprofile(fbUserID, function(userprofile, error){
+    api.userprofile(fbUserID, function(userprofile, error){
         if(error){
             console.log('Fail to retrieve fb userprofile:%s', fbUserID);
             fn(null, error);

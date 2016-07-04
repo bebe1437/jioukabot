@@ -191,7 +191,7 @@ exports.chargeMessage = function(recipientId, activity_id, next){
             payload: payload.replace('{value}', 1)
           },{
             type: "postback",
-            title: "佣金",
+            title: "零用錢",
             payload: payload.replace('{value}', 2)
           }]
         }

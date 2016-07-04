@@ -12,45 +12,18 @@
 
 const 
   bodyParser = require('body-parser'),
-  config = require('config'),
   crypto = require('crypto'),
-  express = require('express'),
-  Sync = require("sync");
+  express = require('express');
   
 var check = require('./check');
 var route = require('./route');
 var User = require('./model/User');
+var constants = require("./constants");
 var app = express();
 
 app.set('port', process.env.PORT || 5000);
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 app.use(express.static('public'));
-
-/*
- * Be sure to setup your config values before running this code. You can 
- * set them using environment variables or modifying the config file in /config.
- *
- */
-
-// App Secret can be retrieved from the App Dashboard
-const APP_SECRET = (process.env.MESSENGER_APP_SECRET) ? 
-  process.env.MESSENGER_APP_SECRET :
-  config.get('appSecret');
-
-// Arbitrary value used to validate a webhook
-const VALIDATION_TOKEN = (process.env.MESSENGER_VALIDATION_TOKEN) ?
-  (process.env.MESSENGER_VALIDATION_TOKEN) :
-  config.get('validationToken');
-
-// Generate a page access token for your page from the App Dashboard
-const PAGE_ACCESS_TOKEN = (process.env.MESSENGER_PAGE_ACCESS_TOKEN) ?
-  (process.env.MESSENGER_PAGE_ACCESS_TOKEN) :
-  config.get('pageAccessToken');
-
-if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
-  console.error("Missing config values");
-  process.exit(1);
-}
 
 /*
  * Use your own validation token. Check that the token used in the Webhook 
@@ -59,7 +32,7 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
  */
 app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
-      req.query['hub.verify_token'] === VALIDATION_TOKEN) {
+      req.query['hub.verify_token'] === constants.validationToken) {
     console.log("Validating webhook");
     res.status(200).send(req.query['hub.challenge']);
   } else {
@@ -67,6 +40,7 @@ app.get('/webhook', function(req, res) {
     res.sendStatus(403);          
   }  
 });
+
 
 
 /*
@@ -138,7 +112,7 @@ function verifyRequestSignature(req, res, buf) {
     var method = elements[0];
     var signatureHash = elements[1];
 
-    var expectedHash = crypto.createHmac('sha1', APP_SECRET)
+    var expectedHash = crypto.createHmac('sha1', constants.appSecret)
                         .update(buf)
                         .digest('hex');
 

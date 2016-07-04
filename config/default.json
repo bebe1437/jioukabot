@@ -1,4 +1,8 @@
 {
+    "api": {
+       "sendMessage": "https://graph.facebook.com/v2.6/me/messages",
+       "userprofile": "https://graph.facebook.com/v2.6/{USER_ID}"
+    },
     "appSecret": "07a6c713dcf7bac0bd56a11051968e6b",
     "pageAccessToken": "EAAVZBUBZC3eZCoBAELZAYX2r8mZBbRxCrq5PGZAXBh04bR7giqLbamWtMAb2kieXaapvGSRdlZBpBZAJlJeCcHheCWaE32aLCU8FqktwnIYNbZCyrAriUIyTWCU0lG5caxVq9Crv8b4mrKxniv0IqhI8ZC6sxAQbOQwYTsZBAZACWnC4rAZDZD",
     "validationToken": "03030502",
