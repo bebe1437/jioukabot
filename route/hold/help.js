@@ -29,26 +29,6 @@ exports.createMessage = function(recipientId){
     });
 }
 
-/*
-exports.editMessage = function(recipientId, userActivity) {
-    var payload = {
-        route: 'hold',
-        action: '{value}',
-        response:{
-            key: userActivity.activity_id
-        }
-    }
-    payload = JSON.stringify(payload);
-    
-    var content =  "哈囉！這是你的揪咖活動內容：\r\n".concat(userActivity.output);
-    var buttons = [
-        { type: 'postback', title: '編輯揪咖', payload: payload.replace('{value}', 'edit')},
-        { type: 'postback', title: '停止配對', payload: payload.replace('{value}', 'stopmatch')}
-    ];
-    route.sendButtonMessage(recipientId, content, buttons);
-}
-*/
-
 exports.editMessage = function(recipientId, user_name, userActivity) {
   var content = user_name.concat(", 以下是你目前的揪咖內容：\r\n").concat(userActivity.output);
   var activity_id = userActivity.activity_id;
@@ -58,8 +38,9 @@ exports.editMessage = function(recipientId, user_name, userActivity) {
        var main = {
         title: "設定",
         subtitle: "每人一次只能揪一個活動喔！",
-        buttons:[{ type: "postback", title: "停止配對", payload:"test"}
-        ,{ type: "postback", title: "取消揪咖", payload:"test"}]
+        buttons:[{ type: "postback", title: userActivity.status == 0 ? "停止配對":"開啟配對"
+            , payload: Payload.holdstatus(activity_id, userActivity.status == 0 ? 2:0 , next)}
+        ,{ type: "postback", title: "取消揪咖", payload: Payload.holdstatus(activity_id, 1)}]
         }
 
       var charge = {

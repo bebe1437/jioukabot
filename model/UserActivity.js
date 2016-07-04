@@ -6,7 +6,7 @@ var db = require("./db").get();
     created_time:timestamp,
     activity_id:,
     host:{user_id},
-    status: 0-created, 1-canceled
+    status: 0-created, 1-canceled, 2-stopmatch
     type: 電影,
     content: 來去看電影吧,
     location: 台北,

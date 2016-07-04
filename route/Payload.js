@@ -31,3 +31,7 @@ Payload.gender = function(activity_id, value, next){
 Payload.holdfield = function(activity_id, value, next){
     return new Payload(init('hold', 'field', activity_id, value, next));
 }
+
+Payload.holdstatus = function(activity_id, value,  next){
+    return new Payload(init('hold', 'status', activity_id, value , next));
+}
