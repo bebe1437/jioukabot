@@ -43,3 +43,21 @@ exports.next = function(action, recipientId, value, userPrefer, next){
       route.err(recipientId, 'Undefineda action:' + action);
   }  
 }
+
+exports.requireField = function(recipientId, field, next) {
+    var message;
+    switch(field){
+        case 'content':
+            message = "哈囉！想要參加什麼活動呢？";
+            break;
+        default:
+            route.err(recipientId, 'Not valid type for HOLD_CREATE:'+field);
+            return;
+    }
+    var userfield = {
+      route: 'match',
+      field: field,
+      next: next
+    }
+    route.requireFieldMessage(recipientId, message, userfield);
+}

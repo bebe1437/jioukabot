@@ -31,8 +31,11 @@ exports.editMessage = function(recipientId, user_name, userPrefer) {
        var main = {
         title: "設定",
         subtitle: "此開關為幫你找活動配對，跟你的揪咖開關無關喔＾＾",
-        buttons:[{ type: "postback", title: userPrefer.status == 0 ? "停止配對":"開啟配對"
-            , payload: Payload.matchtatus(userPrefer.status == 0 ? 1 : 0 , next).output}]
+        buttons:[
+          { type: "postback", title: userPrefer.status == 0 ? "停止配對":"開啟配對"
+            , payload: Payload.matchtatus(userPrefer.status == 0 ? 1 : 0 , next).output},
+          { type: "postback", title: "編輯搜尋", payload: Payload.matchrequirecontent(next).output} 
+          ]
         }
 
       var charge = {

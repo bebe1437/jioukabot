@@ -51,3 +51,7 @@ Payload.matchgender = function(value, next){
 Payload.matchcharge = function(value, next){
     return new Payload(init('match', 'charge', '', value , next));
 }
+
+Payload.matchrequirecontent = function(next){
+    return new Payload(init('match', 'require_content', '', '' , next));
+}

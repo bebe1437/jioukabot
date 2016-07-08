@@ -6,12 +6,13 @@ var db = require("./db").get();
     gender: 0-male, 1-female, 2-all
     charge: 0-free, 1-share, 2-allowance
     locale:
+    content:
     status: 0-available, 1-unavailable
     updated_time:timestamp
 }
 */
 const gender_desc =['限男', '限女', '不限'];
-const charge_desc =['免費', '均攤',  '零用錢'];
+const charge_desc =['免費', '付費',  '零用錢'];
 module.exports = UserPrefer;
 function UserPrefer(obj){
     for(var key in obj){
@@ -25,7 +26,11 @@ function UserPrefer(obj){
     
     var output = "性別： ".concat(this.gender_output)
     .concat("\r\n費用： ").concat(this.charge_output)
-    .concat("\r\n語系： ").concat(this.locale);
+    .concat("\r\n語系： ").concat(this.locale)
+    .concat("\r\n搜尋：");
+    if(this.content){
+       output.concat(this.content);
+    }
     
     this.output = output;
 };
