@@ -14,7 +14,6 @@ exports.process = function(recipientId, response){
     UserActivity.findAsHost(recipientId, function(userActivity){
         userActivity 
         ? User.valid(recipientId, function(user){
-            console.log(JSON.stringify(user));
             help.editMessage(recipientId, user.first_name,  userActivity)
         })
         : help.createMessage(recipientId);
@@ -89,7 +88,7 @@ exports.editMessage = function(recipientId, user_name, userActivity) {
             type: "template",
             payload: {
               template_type: "generic",
-              elements: [main, charge, gender, type, location, content]
+              elements: [main, charge, gender, location, content]
             }
           }
         }
