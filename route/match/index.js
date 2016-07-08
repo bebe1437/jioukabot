@@ -8,7 +8,9 @@ const routes = {
   help: require("./help"),
   charge: require("./charge"),
   gender: require("./gender"),
-  status: require("./status")
+  status: require("./status"),
+  require_content: require("./require_content"),
+  content: require("./content")
 }
 /*
  * payload:{
