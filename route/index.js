@@ -106,7 +106,7 @@ exports.sendTextMessage = function(recipientId, messageText, callback) {
 /*
  * Help
  *
- */
+
 exports.helpMessage = function(recipientId){
   var payload = {
     route: '{value}',
@@ -143,6 +143,32 @@ exports.helpMessage = function(recipientId){
   };  
 
   api.sendMessage(messageData);    
+}
+*/
+
+exports.helpMessage = function(recipientId){
+  var payload = {
+    route: '{value}',
+    action: 'help'
+  }
+  payload = JSON.stringify(payload);
+  
+  var messageData = {
+    recipient:{
+      id: recipientId
+    },
+    message:{
+      text:"我可以幫你什麼哩？",
+      "quick_replies":[
+        {
+          content_type:"text",
+          title:"找咖",
+          payload: payload.replace('{value}', 'hold')
+        }
+      ]
+    }
+  }
+  api.sendMessage(messageData);  
 }
 
 exports.sendButtonMessage = function(recipientId, text, buttons){
