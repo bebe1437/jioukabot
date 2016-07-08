@@ -114,7 +114,7 @@ exports.requireField = function(recipientId, activity_id, field, next) {
 
 /*
  * show gender message
-*/
+
 exports.genderMessage = function(recipientId, activity_id, next){
   
   var messageData = {
@@ -147,11 +147,40 @@ exports.genderMessage = function(recipientId, activity_id, next){
   
   route.cleanFieldMessage(recipientId, messageData);
 }
+*/
+
+
+exports.genderMessage = function(recipientId, activity_id, next){
+  var messageData = {
+    recipient:{
+      id: recipientId
+    },
+    message:{
+      text:"有指定配對性向嗎？",
+      "quick_replies":[
+        {
+          content_type:"text",
+          title:"限男",
+          payload: Payload.gender(activity_id, 0, next).output
+        },{
+          content_type:"text",
+          title:"限女",
+          payload: Payload.gender(activity_id, 1, next).output
+        },{
+          content_type:"text",
+          title:"不限",
+          payload: Payload.gender(activity_id, 2, next).output
+        }
+      ]
+    }
+  }
+  route.cleanFieldMessage(recipientId, messageData);
+}
 
 
 /*
  * show charge message
-*/
+
 exports.chargeMessage = function(recipientId, activity_id, next){
   
   var messageData = {
@@ -182,5 +211,33 @@ exports.chargeMessage = function(recipientId, activity_id, next){
     }
   }; 
   
+  route.cleanFieldMessage(recipientId, messageData);
+}
+*/
+
+exports.chargeMessage = function(recipientId, activity_id, next){
+  var messageData = {
+    recipient:{
+      id: recipientId
+    },
+    message:{
+      text:"費用怎麼算哩？",
+      "quick_replies":[
+        {
+          content_type:"text",
+          title:"免費",
+          payload: Payload.charge(activity_id, 0, next).output
+        },{
+          content_type:"text",
+          title:"付費",
+          payload: Payload.charge(activity_id, 1, next).output
+        },{
+          content_type:"text",
+          title:"零用錢",
+          payload: Payload.charge(activity_id, 2, next).output
+        }
+      ]
+    }
+  }
   route.cleanFieldMessage(recipientId, messageData);
 }
