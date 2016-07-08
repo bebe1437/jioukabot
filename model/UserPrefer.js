@@ -1,5 +1,5 @@
 var db = require("./db").get();
-var api = require("./route/api");
+var api = require("../route/api");
 
 /*global UserPrefer
 * key: {user_id}
