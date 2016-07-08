@@ -26,7 +26,6 @@ function UserPrefer(obj){
     
     var output = "性別： ".concat(this.gender_output)
     .concat("\r\n費用： ").concat(this.charge_output)
-    .concat("\r\n語系： ").concat(this.locale)
     .concat("\r\n搜尋： ").concat(this.content);
     
     this.output = output;

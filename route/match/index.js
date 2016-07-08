@@ -30,7 +30,7 @@ exports.save = function(recipientId, key, field, value, fn){
     updates['/userprefer/{user_id}/updated_time'.replace('{user_id}', recipientId)] = updated_time;
     db.update(updates);
     UserPrefer.find(recipientId, function(userPrefer){
-        fn(recipientId, value, userPrefer);
+        fn(userPrefer);
     });
 }
 
