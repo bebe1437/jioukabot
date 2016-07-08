@@ -157,20 +157,23 @@ exports.searchUsers = function(recipientId, activity, block_list, fn){
 
 exports.createActivities = function(activity_id, activity, fn){
   var date = dateFormat(Date.now(), "yyyy/mm/dd HH:MM:ss");
-  es_client.create({
-    index: 'matches',
-    type: 'activities',
-    id: activity_id,
-    body: {
+  var body = {
       host: activity.host,
       activity_id: activity_id,
       host_gender: activity.host_gender,
-      charge: activity.charge.type,
       gender: activity.gender,
       locale: activity.locale,
       content: activity.content,
       update_time: date
-    }
+  };
+  if(activity.charge){
+    body.charge = activity.charge.type;
+  }
+  es_client.create({
+    index: 'matches',
+    type: 'activities',
+    id: activity_id,
+    body: body
   }, fn);  
 }
 
