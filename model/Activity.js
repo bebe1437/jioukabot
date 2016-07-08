@@ -1,13 +1,16 @@
 var db = require("./db").get();
 var uuid = require('node-uuid');
+var User = require("./User");
 
 /*global Activity
 * key: {activity_id}
 {
     host:{user_id},
+    host_gender:,
     status: 0-created, 1-canceled, 2-stopmatch
     content: 來去看電影吧,
     location: 台北,
+    locale:,
     gender: 0-male, 1-female, 2-all
     img_url: 
     charge:{
@@ -38,11 +41,15 @@ Activity.create = function(user_id, activity, fn){
 }
 
 Activity.init = function(user_id, fn){
-    var activity = {
-            host: user_id,
-            status: 0
-    }
-    this.create(user_id, activity, fn);
+    User.valid(user_id, function(user){
+        var activity = {
+                host: user_id,
+                host_gender: user.gender,
+                status: 0,
+                locale: user.locale
+        }
+        this.create(user_id, activity, fn);        
+    });
 }
 
 Activity.findByKey = function(activity_id, fn){

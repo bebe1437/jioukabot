@@ -15,6 +15,8 @@ define("appSecret", config.get('appSecret'));
 define("validationToken", config.get('validationToken'));
 // Generate a page access token for your page from the App Dashboard
 define("pageAccessToken", config.get('pageAccessToken'));
+// elasticsearch
+define("elasticsearch", config.get('elasticsearch'));
 
 
 /*
@@ -22,27 +24,12 @@ define("pageAccessToken", config.get('pageAccessToken'));
  * set them using environment variables or modifying the config file in /config.
  *
  */
-if (!(this.api && this.appSecret && this.validationToken && this.pageAccessToken)) {
+if (!(this.api && this.appSecret && this.validationToken && this.pageAccessToken && this.elasticsearch)) {
     console.error("Missing config values");
     console.log('===System required configuration===');
     console.log('===appSecret：%s===', this.appSecret);
     console.log('===validationToken：%s===', this.validationToken);
     console.log('===pageAccessToken：%s===', this.pageAccessToken);  
+    console.log('===elasticsearch：%s===', this.elasticsearch);  
     process.exit(1);
 }
-
-/**payload */
-
-define("payload",{
-    hold:{
-        charge: {
-            route: 'hold',
-            action: 'charge',
-            response: {
-              key: '{activity_id}',
-              value: '{value}',
-              next: '{next}'
-            }
-        }
-    }
-})

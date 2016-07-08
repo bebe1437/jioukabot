@@ -3,6 +3,8 @@ var db = require("./db").get();
 /*global UserPrefer
 * key: {user_id}
 {
+    user_id:,
+    user_gender:
     gender: 0-male, 1-female, 2-all
     charge: 0-free, 1-share, 2-allowance
     locale:
@@ -40,8 +42,10 @@ UserPrefer.create = function(user_id, userPrefer, fn){
 
 UserPrefer.init = function(user_id, user, fn){
     this.create(user_id, {
+        user_id: user_id,
         gender: 2,
         charge: 2,
+        user_gender: user.gender,
         locale: user.locale,
         status: 1,
         updated_time: Date.now()        

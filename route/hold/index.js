@@ -6,6 +6,7 @@ var UserActivity = require("../../model/UserActivity");
 var UserSys = require("../../model/UserSys");
 var User = require("../../model/User");
 var help = require("./help");
+var api = require("../api");
 
 const routes = {
   help: require("./help"),
@@ -76,7 +77,13 @@ exports.save = function(recipientId, activity_id, field, value, fn){
         
         Activity.findByKey(activity_id, function(activity){
           activity.activity_id = activity_id;
-          fn(recipientId, value, activity);
+          api.createActivities(activity_id, activity, function(err, res){
+            if(err){
+              route.err(recipientId, err);
+              return;
+            }
+            fn(recipientId, value, activity);
+          });
         });
     });
 }

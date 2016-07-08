@@ -3,6 +3,7 @@ var User = require("../../model/User");
 var UserPrefer = require("../../model/UserPrefer");
 var help = require("./help");
 var route = require("../index");
+var api = require("../api");
 
 const routes = {
   help: require("./help"),
@@ -30,7 +31,13 @@ exports.save = function(recipientId, key, field, value, fn){
     updates['/userprefer/{user_id}/updated_time'.replace('{user_id}', recipientId)] = updated_time;
     db.update(updates);
     UserPrefer.find(recipientId, function(userPrefer){
-        fn(recipientId, value, userPrefer);
+        api.createUsers(recipientId, userPrefer, function(err, res){
+          if(err){
+            route.err(recipientId, err);
+            return;
+          }
+          fn(recipientId, value, userPrefer);
+        });
     });
 }
 
