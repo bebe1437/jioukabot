@@ -53,7 +53,10 @@ exports.receivedMessage = function(event) {
   console.log("Received message for user %d and page %d at %d with message:", 
     senderID, recipientID, timeOfMessage);
   console.log(JSON.stringify(message));
-
+  if(message.quick_reply){
+    this.receivedQuickReply(event);
+    return;
+  }
   var messageId = message.mid;
 
   // You may get a text or attachment but not both
@@ -126,6 +129,40 @@ exports.receivedPostback = function(event) {
   // The 'payload' param is a developer-defined field which is set in a postback 
   // button for Structured Messages. 
   var payload = event.postback.payload;
+  SysLog.set(senderID, 'postback', payload, function(err){
+    if(err){
+      route.err(senderID, err);
+      return;
+    }
+    console.log("Received postback for user %d and page %d with payload '%s' " + 
+    "at %d", senderID, recipientID, payload, timeOfPostback);
+    
+    //locak same payload in 5 seconds
+      UserSys.setPostback(senderID, payload, function(err){
+        if(err){
+          route.err(err);
+          return;
+        }
+        route.postback(senderID, JSON.parse(payload));
+      }); 
+  });
+}
+
+/*
+ * Quick reply Event
+ *
+ * This event is called when a postback is tapped on a Structured Message. Read
+ * more at https://developers.facebook.com/docs/messenger-platform/webhook-reference#postback
+ * 
+ */
+exports.receivedQuickReply = function(event) {
+  var senderID = event.sender.id;
+  var recipientID = event.recipient.id;
+  var timeOfPostback = event.timestamp;
+
+  // The 'payload' param is a developer-defined field which is set in a postback 
+  // button for Structured Messages. 
+  var payload = event.message.quick_reply.payload;
   SysLog.set(senderID, 'postback', payload, function(err){
     if(err){
       route.err(senderID, err);
