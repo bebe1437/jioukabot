@@ -41,6 +41,7 @@ Activity.create = function(user_id, activity, fn){
 }
 
 Activity.init = function(user_id, fn){
+    var at = this;
     User.valid(user_id, function(user){
         var activity = {
                 host: user_id,
@@ -48,7 +49,7 @@ Activity.init = function(user_id, fn){
                 status: 0,
                 locale: user.locale
         }
-        this.create(user_id, activity, fn);        
+        at.create(user_id, activity, fn);        
     });
 }
 
