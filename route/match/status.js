@@ -13,7 +13,7 @@ exports.process = function(recipientId, response){
     var value = response.value;
     var next = response.next;
     
-    main.save(recipientId, '' , 'status', value, function(userPrefer){
+    main.save(recipientId, '' , 'status', value, function(recipientId, value, userPrefer){
         console.log('test:%s', JSON.stringify(userPrefer));
         switch(value){
             case 0:

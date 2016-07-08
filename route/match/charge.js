@@ -13,10 +13,10 @@ exports.process = function(recipientId, response){
     var value = response.value;
     var next = response.next;
     
-    main.save(recipientId, 'charge', value, function(userPrefer){
+    main.save(recipientId,'', 'charge', value, function(recipientId, value, userPrefer){
         route.sendTextMessage(recipientId, '配對偏好已更新！', function(){
             route.parsenext(next, function(nextaction, nextleft){
-            main.next(nextaction, recipientId, value, userPrefer, nextleft);
+                main.next(nextaction, recipientId, value, userPrefer, nextleft);
             });
         });
     });

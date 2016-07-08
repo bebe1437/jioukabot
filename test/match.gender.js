@@ -6,10 +6,10 @@ var next = "edit";
 
   var payload ={
     route: 'match',
-    action: 'gender',
+    action: 'charge',
     response: {
       key: activity_id,
-      value: 0,
+      value: 2,
       next: next
     }
   };
