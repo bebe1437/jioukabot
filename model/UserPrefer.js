@@ -29,7 +29,8 @@ function UserPrefer(obj){
     
     var output = "性別： ".concat(this.gender_output)
     .concat("\r\n費用： ").concat(this.charge_output)
-    .concat("\r\n搜尋： ").concat(this.content);
+    .concat("\r\n搜尋： ").concat(this.content? this.content: '[未設定]');
+    
     
     this.output = output;
 };

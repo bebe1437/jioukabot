@@ -29,15 +29,20 @@ function UserActivity(obj){
        if(this.charge.price){
            this.charge_output = this.charge_output.replace('%s', this.charge.price);
        }
+    }else{
+      this.charge_output = '[未設定]';
     }
+    
     if(this.gender || this.gender == 0){
         this.gender_output = gender_desc[this.gender];
+    }else{
+        this.gender_output = '[未設定]';
     }
     
     var output = '費用：'.concat(this.charge_output)
         .concat('\r\n').concat('性別：').concat(this.gender_output)
-        .concat('\r\n').concat('地點：').concat(this.location)
-        .concat('\r\n').concat('內容：').concat(this.content);    
+        .concat('\r\n').concat('地點：').concat(this.location ? this.location : '[未設定]')
+        .concat('\r\n').concat('內容：').concat(this.content ? this.content : '[未設定]');   
     this.output = output;
 };
 
