@@ -164,6 +164,10 @@ exports.helpMessage = function(recipientId){
           content_type:"text",
           title:"找咖",
           payload: payload.replace('{value}', 'hold')
+        },{
+          content_type: "text",
+          title: "配對設定",
+          payload: payload.replace('{value}', 'match')
         }
       ]
     }

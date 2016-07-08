@@ -49,7 +49,7 @@ exports.editMessage = function(recipientId, user_name, userActivity) {
         title: "費用",
         subtitle: userActivity.charge_output,
         buttons:[{ type: "postback", title: "免費", payload: Payload.charge(activity_id, 0, next).output }
-        ,{ type: "postback", title: "均攤", payload: Payload.charge(activity_id, 1, next).output }
+        ,{ type: "postback", title: "付費", payload: Payload.charge(activity_id, 1, next).output }
         ,{ type: "postback", title: "零用錢", payload: Payload.charge(activity_id, 2, next).output }]
         }
         
