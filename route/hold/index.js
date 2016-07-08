@@ -87,9 +87,6 @@ exports.requireField = function(recipientId, activity_id, field, next) {
         case 'content':
             message = "哈囉！今天想到什麼好玩的嗎？";
             break;
-        case 'type':
-            message = "給活動一個類別吧！例如：電影、吃飯...";
-            break;
         case 'location':
             message = "給個大概位置吧？城市名稱";
             break;

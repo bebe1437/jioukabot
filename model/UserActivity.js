@@ -7,7 +7,6 @@ var db = require("./db").get();
     activity_id:,
     host:{user_id},
     status: 0-created, 1-canceled, 2-stopmatch
-    type: 電影,
     content: 來去看電影吧,
     location: 台北,
     charge:{
@@ -37,7 +36,6 @@ function UserActivity(obj){
     
     var output = '費用：'.concat(this.charge_output)
         .concat('\r\n').concat('性別：').concat(this.gender_output)
-        .concat('\r\n').concat('類別：').concat(this.type)
         .concat('\r\n').concat('地點：').concat(this.location)
         .concat('\r\n').concat('內容：').concat(this.content);    
     this.output = output;

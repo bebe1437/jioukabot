@@ -24,7 +24,7 @@ exports.process = function(recipientId, response){
 exports.createMessage = function(recipientId){
     Activity.init(recipientId, function(activity_id, activity, err){
         UserActivity.create(recipientId, activity_id, activity, function(useractivity, err){
-           main.requireField(recipientId, activity_id, 'content', 'type.location.gender.charge.show'); 
+           main.requireField(recipientId, activity_id, 'content', 'location.gender.charge.show'); 
         });
     });
 }
@@ -61,13 +61,13 @@ exports.editMessage = function(recipientId, user_name, userActivity) {
         ,{ type: "postback", title: "限女", payload: Payload.gender(activity_id, 1, next).output}
         ,{ type: "postback", title: "不限", payload: Payload.gender(activity_id, 2, next).output}]
         }    
-     
+/*     
        var type = {
         title: "類別",
         subtitle: userActivity.type,
         buttons:[{ type: "postback", title: "編輯", payload: Payload.holdfield(activity_id, 'type', next).output }]
         }   
-      
+*/      
        var location = {
         title: "地點",
         subtitle: userActivity.location,

@@ -6,7 +6,6 @@ var uuid = require('node-uuid');
 {
     host:{user_id},
     status: 0-created, 1-canceled, 2-stopmatch
-    type: 電影,
     content: 來去看電影吧,
     location: 台北,
     gender: 0-male, 1-female, 2-all
