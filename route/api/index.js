@@ -107,10 +107,11 @@ exports.createUsers = function(user_id, userPrefer, fn){
     body: {
       user_id: userPrefer.user_id,
       user_gender: userPrefer.user_gender,
-      prefer_locale: userPrefer.locale,
-      prefer_gender: userPrefer.gender,
-      prefer_charge: userPrefer.charge,
-      prefer_content: userPrefer.content,
+      locale: userPrefer.locale,
+      gender: userPrefer.gender,
+      charge: userPrefer.charge,
+      content: userPrefer.content,
+      status: userPrefer.status,
       update_time: date
     }
   }, fn);  
@@ -122,6 +123,7 @@ exports.searchUsers = function(recipientId, activity, block_list, fn){
     {
       simple_query_string:{ query: activity.content, analyzer: "smartcn"}
     },
+    { match:{status:0}},
     { match:{locale:activity.locale}},
     { match:{charge:activity.charge.type}}
   ];
@@ -164,6 +166,7 @@ exports.createActivities = function(activity_id, activity, fn){
       gender: activity.gender,
       locale: activity.locale,
       content: activity.content,
+      status: activity.status,
       update_time: date
   };
   if(activity.charge){
@@ -183,6 +186,7 @@ exports.searchActivities = function(recipientId, userPrefer, block_list, fn){
     {
       simple_query_string:{ query: userPrefer.content, analyzer: "smartcn"}
     },
+    { match:{status:0}},
     { match:{locale:userPrefer.locale}},
     { match:{charge:userPrefer.charge}}
   ];
