@@ -1,5 +1,6 @@
 var route = require("../index");
 var main = require("./index");
+var api = require("../api");
 
 /*
 * change status
@@ -21,7 +22,13 @@ exports.process = function(recipientId, response){
                 route.sendTextMessage(recipientId, '已經幫你開啟配對囉XD');
                 break;
             case 1:
-                route.sendTextMessage(recipientId, '已經幫你取消揪團囉(在地上畫圈圈...)');
+                api.deleteActivity(activity_id, function(err, res){
+                    if(err){
+                        route.err(recipientId, err);
+                        return;
+                    }
+                    route.sendTextMessage(recipientId, '已經幫你取消揪團囉(在地上畫圈圈...)');
+                });
                 return;
             case 2:
                 route.sendTextMessage(recipientId, '已經幫你停止配對囉^_^');

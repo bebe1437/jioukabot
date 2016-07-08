@@ -31,7 +31,7 @@ exports.save = function(recipientId, key, field, value, fn){
     updates['/userprefer/{user_id}/updated_time'.replace('{user_id}', recipientId)] = updated_time;
     db.update(updates);
     UserPrefer.find(recipientId, function(userPrefer){
-        api.createUsers(recipientId, userPrefer, function(err, res){
+        api.updateDoc('prefers', recipientId, field, value, function(err, res){
           if(err){
             route.err(recipientId, err);
             return;

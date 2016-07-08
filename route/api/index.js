@@ -102,7 +102,7 @@ exports.createUsers = function(user_id, userPrefer, fn){
   var date = dateFormat(Date.now(), "yyyy/mm/dd HH:MM:ss");
   es_client.create({
     index: 'matches',
-    type: 'users',
+    type: 'prefers',
     id: user_id,
     body: {
       user_id: userPrefer.user_id,
@@ -122,16 +122,16 @@ exports.searchUsers = function(recipientId, activity, block_list, fn){
     {
       simple_query_string:{ query: activity.content, analyzer: "smartcn"}
     },
-    { match:{prefer_locale:activity.locale}},
-    { match:{prefer_charge:activity.charge.type}}
+    { match:{locale:activity.locale}},
+    { match:{charge:activity.charge.type}}
   ];
   if(activity.gender!=2){
     musts.push({ match:{user_gender:activity.gender}});
   }
   
   var shoulds = [
-    { match:{prefer_gender:2}},
-    { match:{prefer_gender:activity.host_gender}}
+    { match:{gender:2}},
+    { match:{gender:activity.host_gender}}
   ];
   
   var mustnots =[
@@ -151,7 +151,7 @@ exports.searchUsers = function(recipientId, activity, block_list, fn){
       }
   };
   
-  this.search(recipientId, 'users', query, fn);
+  this.search(recipientId, 'prefers', query, fn);
 }
 
 
@@ -253,4 +253,19 @@ exports.deleteActivity = function(activity_id, fn){
     type: 'activities',
     id: activity_id
   }, fn);  
+}
+
+exports.updateDoc = function(type, doc_id, field, value, fn){
+  var date = dateFormat(Date.now(), "yyyy/mm/dd HH:MM:ss");
+  var body ={
+    doc:{}
+  };
+  body.doc[field] = value;
+  body.doc['update_time'] = date;
+  es_client.update({
+    index: 'matches',
+    type: type,
+    id: doc_id,
+    body: body
+  }, fn);
 }

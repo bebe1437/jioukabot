@@ -77,7 +77,12 @@ exports.save = function(recipientId, activity_id, field, value, fn){
         
         Activity.findByKey(activity_id, function(activity){
           activity.activity_id = activity_id;
-          api.createActivities(activity_id, activity, function(err, res){
+          var field_name = field == 'charge/type' ? 'charge': field;
+          if(field_name == 'charge/price'){
+            fn(recipientId, value, activity);
+            return;
+          }
+          api.updateDoc('activities', activity_id, field_name, value, function(err, res){
             if(err){
               route.err(recipientId, err);
               return;

@@ -1,6 +1,7 @@
 var db = require("./db").get();
 var uuid = require('node-uuid');
 var User = require("./User");
+var api = require('../route/api');
 
 /*global Activity
 * key: {activity_id}
@@ -36,7 +37,13 @@ Activity.create = function(user_id, activity, fn){
     console.log('Create Activity[%s]:%s', activity_id, activity);
     var ref = db.database().ref("/activities/" + activity_id);
     ref.set(activity, function(err){
-        fn(activity_id, activity, err);
+        if(err){
+            fn(activity_id, activity, err);
+            return;
+        }
+        api.createActivities(activity_id, activity, function(err, res){
+            fn(activity_id, activity, err);
+        });
     });
 }
 

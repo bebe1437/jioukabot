@@ -1,4 +1,5 @@
 var db = require("./db").get();
+var api = require("./route/api");
 
 /*global UserPrefer
 * key: {user_id}
@@ -36,7 +37,13 @@ function UserPrefer(obj){
 UserPrefer.create = function(user_id, userPrefer, fn){
     var ref = db.database().ref('/userprefer/'+user_id);
     ref.set(userPrefer, function(err){
-        fn(err);
+        if(err){
+            fn(err);
+            return;
+        }
+        api.createUsers(user_id, userPrefer, function(err, res){
+            fn(err);    
+        });
     });
 }
 
