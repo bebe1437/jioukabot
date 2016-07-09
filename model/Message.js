@@ -18,7 +18,7 @@ function Message(obj){
 
 Message.create = function(activity_id, sender_id, msg, fn){
     var key = activity_id + '_' + sender_id + '_' + Date.now();
-    var ref = db.databae().ref('/messages/'+key);
+    var ref = db.database().ref('/messages/'+key);
     msg.create_time = Date.now();
     ref.set(msg, function(err){
         fn(msg, err);

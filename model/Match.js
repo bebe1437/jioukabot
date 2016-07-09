@@ -42,7 +42,7 @@ Match.create = function(user, matchUser, activity_id, fn){
 }
 
 Match.find = function(match_key, fn){
-    var ref = db.databae().ref('/matches/'+match_key);
+    var ref = db.database().ref('/matches/'+match_key);
     ref.once('value', function(snapshot){
         fn(snapshot.exists() ? snapshot.val(): null);
     });

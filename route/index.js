@@ -3,7 +3,8 @@ var api = require('./api');
 
 const routes={
   hold: require('./hold'),
-  match: require("./match")
+  match: require("./match"),
+  message: require("./message")
 }
 
 /*
