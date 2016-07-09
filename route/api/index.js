@@ -279,14 +279,45 @@ exports.updateDoc = function(type, doc_id, field, value, fn){
 }
 
 exports.initElasticsearch = function(){
-  es_client.delete({
+  var main = this;
+  es_client.indices.delete({
     index: 'matches'
-  }, function(res, err){
+  }, function(err, res){
     if(err){
       console.error('Fail to delete index:%s', JSON.stringify(err));
       return;
     }
-    
+    main.initIndex();
+  });  
+}
+exports.initIndex = function(){
+    var main = this;
+    var index_body = {
+      settings: {
+        index: {
+          analysis: {
+            analyzer: {
+              default: {
+                type: "smartcn"
+              }
+            }
+          }
+        }
+      }
+    };
+    es_client.indices.create({
+      index: 'matches',
+      body: index_body
+    }, function(err, res){
+      if(err){
+        console.error('Fail to create index:%s', JSON.stringify(err));
+        return;
+      }
+      main.initSearchType();
+    });  
+}
+
+exports.initSearchType = function(){
     var prefer_body = {
       properties: {
           user_id:{
@@ -362,6 +393,5 @@ exports.initElasticsearch = function(){
         }
         console.log('===Elasticsearch init completed.===');
       });
-    });
-  });  
+    });  
 }
