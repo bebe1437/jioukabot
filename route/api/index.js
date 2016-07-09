@@ -321,13 +321,15 @@ exports.initSearchType = function(){
     var prefer_body = {
       properties: {
           user_id:{
-              type:"string"
+              type:"string",
+              index:"not_analyzed"
           },
           user_gender:{
               type: "short"
           },
           user_locale:{
-              type: "string"
+              type: "string",
+              index:"not_analyzed"
           },
           gender:{
               type: "short"
@@ -349,7 +351,8 @@ exports.initSearchType = function(){
     var activity_body = {
       properties: {
           activity_id:{
-              type:"string"
+              type:"string",
+              index:"not_analyzed"
           },
           host_gender:{
               "type": "short"
@@ -361,7 +364,8 @@ exports.initSearchType = function(){
               type: "short"
           },
           locale:{
-              type: "string"
+              type: "string",
+              index:"not_analyzed"
           },
           content: {
               type:      "string",

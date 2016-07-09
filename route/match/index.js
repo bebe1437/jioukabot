@@ -1,6 +1,7 @@
 var db = require("../../model/db").get();
 var User = require("../../model/User");
 var UserPrefer = require("../../model/UserPrefer");
+var UserActivity = require("../../model/UserActivity");
 var Block = require("../../model/Block");
 var Match = require("../../model/Match");
 var help = require("./help");
@@ -101,17 +102,19 @@ exports.findMatch = function(recipientId, userPrefer){
           return;
         }
         
-        User.valid(hits.obj.user_id, function(host, err){
+        User.valid(hits.obj.host, function(host, err){
           var activity_id = hits.obj.activity_id;
-          host.user_id = hits.obj.user_id;
+          host.user_id = hits.obj.host;
           User.valid(recipientId, function(user, err){
              user.user_id = recipientId;
+             console.log('host:%s', JSON.stringify(host));
+             console.log('matchuser:%s', JSON.stringify(user));
              Match.create(host, user, activity_id, 'match', function(match ,err){
                if(err){
                  route.err(recipientId, err);
                  return;
                }
-               main.matchMessage(recipientId, activity_id, host, hits.obj.content);
+               main.matchMessage(recipientId, activity_id, host, hits.obj);
              });
           });
         });
@@ -120,7 +123,7 @@ exports.findMatch = function(recipientId, userPrefer){
   });
 }
 
-exports.matchMessage = function(recipientId, activity_id, host, msg){
+exports.matchMessage = function(recipientId, activity_id, host, activity){
       var match_key = activity_id+'_'+recipientId;
       var buttons =[
         {
@@ -133,16 +136,13 @@ exports.matchMessage = function(recipientId, activity_id, host, msg){
             payload: Payload.matchnext(match_key).output
         }
       ];
+      
        var participant = {
-        title: '跟{gender}打聲招呼吧～'.replace('{gender}', host.gender?'妹':'哥'),
-        subtitle: "[{gender}] {name}：{msg}"
-        .replace('{name}', host.first_name)
-        .replace('{gender}', host.gender?'女':'男')
-        .replace('{msg}', msg),
         image_url: host.profile_pic,
         buttons: buttons
         }
         
+      
       var messageData = {
         recipient: {
           id: recipientId
@@ -158,5 +158,10 @@ exports.matchMessage = function(recipientId, activity_id, host, msg){
         }
       };  
     
-      api.sendMessage(messageData);  
+      var content = host.first_name.concat('來揪咖囉！：')
+      .concat('\r\n').concat(new UserActivity(activity).output);
+      route.sendTextMessage(recipientId, content, function(){
+        api.sendMessage(messageData);
+      });
+      
 }
