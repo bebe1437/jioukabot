@@ -17,7 +17,7 @@ exports.process = function(recipientId, response){
     
     Match.find(match_key, function(match){
         if(!match){
-            route.err(recipientId, 'Can not find match data:%s', match_key);
+            route.err(recipientId, 'Can not find match data:'+ match_key);
             return;
         }
         switch(match.status){
