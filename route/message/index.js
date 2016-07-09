@@ -1,6 +1,7 @@
 var Payload = require('../Payload');
 var route = require("../index");
 var Message = require("../../model/Message");
+var User = require("../../model/User");
 var api = require("../api");
 
 const routes = {
@@ -28,7 +29,9 @@ exports.save = function(recipientId, activity_id, receive_id, value, fn){
       route.err(recipientId, err);
       return;
     }
-    main.replyMessage(activity_id, recipientId, receive_id, value);
+    User.valid(recipientId, function(user){
+      main.replyMessage(activity_id, user, receive_id, value);
+    });
   });
 }
 
@@ -51,7 +54,7 @@ exports.replyMessage = function(match_key, sender, receive_id, msg){
         },{
             type: "postback",
             title: "封鎖",
-            payload: Payload.matchreject(match_key, sender.user_id).output
+            payload: Payload.blockreply(match_key, sender.user_id).output
         }
       ];
        var participant = {
