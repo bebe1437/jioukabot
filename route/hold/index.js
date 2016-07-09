@@ -278,7 +278,7 @@ exports.matchUser = function(recipientId, activity_id,  activity){
         return;
       }
       if(hits.total==0){
-        console.log('===There is not match user for activity:%s===', activity_id);
+        route.sendTextMessage(recipientId, '揪咖繼續幫你找咖囉^_^.');
         return;
       }
       User.valid(hits.obj.user_id, function(matchUser, err){
