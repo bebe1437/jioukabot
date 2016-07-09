@@ -8,6 +8,19 @@ const routes={
 }
 
 /*
+ * payload:{
+     route: 
+     action: 
+     response:
+ }
+*/
+exports.postback = function(recipientId, payload){
+  console.log('===route.postback:%s==', JSON.stringify(payload));
+  console.log('route:%s', payload.route);
+  routes[payload.route].process(recipientId, payload);
+}
+
+/*
 * userfield:{
   route:
   key:,
@@ -39,18 +52,6 @@ exports.parsenext = function(next, fn){
     var nextleft = nexts.length>1? next.replace(nextaction+'.', '')  : undefined;
     fn(nextaction, nextleft);    
   }
-}
-
-/*
- * payload:{
-     route: 
-     action: 
-     response:
- }
-*/
-exports.postback = function(recipientId, payload){
-  console.log('===route.postback:%s==', JSON.stringify(payload));
-  routes[payload.route].process(recipientId, payload);
 }
 
 /*
