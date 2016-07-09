@@ -52,13 +52,16 @@ Match.find = function(match_key, fn){
 };
 
 Match.scanActivity = function(user_id, fn){
+    console.log('===scanActivity:%s===', user_id);
     var ref = db.database().ref('/matches');
     ref.orderByKey()
-    .endAt(user_id)
+    .endAt('_'+user_id)
     .once('value', function(snapshots){
         var activity_ids = [];
         snapshots.forEach(function(snapshot){
-            activity_ids.push(snapshot.key.split('_')[0]);
+            var match_key = snapshot.key;
+            var activity_id = match_key.split('_')[0];
+            activity_ids.push(activity_id);;
         });
         fn(activity_ids);
     });

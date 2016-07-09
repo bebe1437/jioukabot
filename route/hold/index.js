@@ -273,9 +273,9 @@ exports.findMatch = function(recipientId,  activity){
   var activity_id = activity.activity_id;
   Block.list(activity_id, function(block_list){
     Match.scanUser(activity_id, function(participants){
-      block_list.concat(participants);
-      console.log('===mathcUser block_list:%s===', block_list);
-      api.searchUsers(recipientId, activity, block_list, function(hits, err){
+      var blocks = block_list.concat(participants);
+      console.log('===mathcUser block_list:%s===', blocks);
+      api.searchUsers(recipientId, activity, blocks, function(hits, err){
         if(err){
           console.error('fail to search in elasticsearch:%s', err);
           return;

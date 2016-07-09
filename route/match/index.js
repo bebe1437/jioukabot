@@ -2,6 +2,7 @@ var db = require("../../model/db").get();
 var User = require("../../model/User");
 var UserPrefer = require("../../model/UserPrefer");
 var UserActivity = require("../../model/UserActivity");
+var Activity = require("../../model/Activity");
 var Block = require("../../model/Block");
 var Match = require("../../model/Match");
 var help = require("./help");
@@ -90,9 +91,9 @@ exports.findMatch = function(recipientId, userPrefer){
   var main = this;
   Block.list(recipientId, function(block_list){
     Match.scanActivity(recipientId, function(activity_ids){
-      block_list.concat(activity_ids);
-      console.log('===matchActivity block_list:%s===', block_list);
-      api.searchActivities(recipientId, userPrefer, block_list, function(hits, err){
+      var blocks = block_list.concat(activity_ids);
+      console.log('===matchActivity block_list:%s===', blocks);
+      api.searchActivities(recipientId, userPrefer, blocks, function(hits, err){
         if(err){
           console.error('fail to search in elasticsearch:%s', err);
           return;
@@ -114,7 +115,9 @@ exports.findMatch = function(recipientId, userPrefer){
                  route.err(recipientId, err);
                  return;
                }
-               main.matchMessage(recipientId, activity_id, host, hits.obj);
+               Activity.findByKey(activity_id, function(activity){
+                 main.matchMessage(recipientId, activity_id, host, activity);
+               });
              });
           });
         });
@@ -138,6 +141,7 @@ exports.matchMessage = function(recipientId, activity_id, host, activity){
       ];
       
        var participant = {
+        title: '跟主揪打聲招呼吧！',
         image_url: host.profile_pic,
         buttons: buttons
         }
@@ -158,7 +162,7 @@ exports.matchMessage = function(recipientId, activity_id, host, activity){
         }
       };  
     
-      var content = host.first_name.concat('來揪咖囉！：')
+      var content = host.first_name.concat('來揪咖囉！詳細資訊：')
       .concat('\r\n').concat(new UserActivity(activity).output);
       route.sendTextMessage(recipientId, content, function(){
         api.sendMessage(messageData);
