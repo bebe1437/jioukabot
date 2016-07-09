@@ -34,6 +34,7 @@ Match.create = function(user, matchUser, activity_id, fn){
         participant: matchUser.gender,
         participant_name: matchUser.first_name,
         participant_profile_pic: matchUser.profile_pic,
+        status:0,
         create_time: Date.now()
     };
     ref.set(match, function(err){
