@@ -2,6 +2,7 @@ var db = require("../../model/db").get();
 var User = require("../../model/User");
 var UserPrefer = require("../../model/UserPrefer");
 var Block = require("../../model/Block");
+var Match = require("../../model/Match");
 var help = require("./help");
 var route = require("../index");
 var api = require("../api");
