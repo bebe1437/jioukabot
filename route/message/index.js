@@ -19,8 +19,9 @@ exports.process = function(recipientId, payload){
   routes[payload.action].process(recipientId, payload.response);
 }
 
-exports.save = function(recipientId, activity_id, receive_id, value, fn){
+exports.save = function(recipientId, match_key, receive_id, value, fn){
   var main = this;
+  var activity_id = match_key.split("_")[0];
   Message.create(activity_id, recipientId, {
     receive_id: receive_id,
     content: value
@@ -30,16 +31,16 @@ exports.save = function(recipientId, activity_id, receive_id, value, fn){
       return;
     }
     User.valid(recipientId, function(user){
-      main.replyMessage(activity_id, user, receive_id, value);
+      main.replyMessage(match_key, user, receive_id, value);
     });
   });
 }
 
-exports.requireField = function(recipientId, activity_id, receive_id) {
+exports.requireField = function(recipientId, match_key, receive_id) {
     var message = "有什麼可以幫你轉告的嗎？(限文字訊息喔）";
     var userfield = {
       route: 'message',
-      key: activity_id,
+      key: match_key,
       field: receive_id
     }
     route.requireFieldMessage(recipientId, message, userfield);
