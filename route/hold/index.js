@@ -281,7 +281,9 @@ exports.matchUser = function(recipientId, activity_id,  activity){
         return;
       }
       User.valid(hits.obj.user_id, function(matchUser, err){
+        matchUser.user_id = hits.obj.user_id;
         User.valid(recipientId, function(user, err){
+           user.user_id = recipientId;
            Match.create(user, matchUser, activity_id, function(match ,err){
              if(err){
                route.err(recipientId, err);

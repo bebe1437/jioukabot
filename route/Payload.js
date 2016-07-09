@@ -57,7 +57,7 @@ Payload.matchrequirecontent = function(next){
 }
 
 Payload.matchreply = function(match_key, receive_id, next){
-    return new Payload(init('message', 'reply', match_key, sender_id , next));
+    return new Payload(init('message', 'reply', match_key, receive_id , next));
 }
 
 Payload.blockreply = function(match_key, sender_id, next){

@@ -24,7 +24,7 @@ function Match(obj){
 };
 
 Match.create = function(user, matchUser, activity_id, fn){
-    var ref = db.databae().ref('/matches/'+activity_id+'_'+matchUser.user_id);
+    var ref = db.database().ref('/matches/'+activity_id+'_'+matchUser.user_id);
     var match = {
         host: user.user_id,
         host_name: user.first_name,
