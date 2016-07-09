@@ -4,7 +4,6 @@ var UserPrefer = require("../../model/UserPrefer");
 var Block = require("../../model/Block");
 var help = require("./help");
 var route = require("../index");
-var hold = require("../hold");
 var api = require("../api");
 var Payload = require("../Payload");
 
@@ -44,7 +43,6 @@ exports.save = function(recipientId, key, field, value, fn){
             if(userPrefer.content
             && userPrefer.charge
             && userPrefer.gender
-            && userPrefer.location
             && userPrefer.status == 0){
               setTimeout(function(){
                 main.findMatch(recipientId, userPrefer);
