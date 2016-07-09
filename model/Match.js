@@ -1,10 +1,18 @@
 var db = require("./db").get();
-var uuid = require('node-uuid');
 
 /*global Match
-* key: {activity_id}_{locale}_{charge}_{gender}
+* key: {activity_id}_{participant_id}
 {
-    copy field from Activity
+    host:{user_id},
+    host_name:{first_name},
+    host_gender:{gender},
+    host_profile_pic:{profile_pic},
+    participant:{user_id},
+    participant:{gender},
+    participant_name:{first_name},
+    participant_profile_pic:{profile_pic}
+    status: 0-availabe, 1-host-closed, 2-participant-close
+    create_time:{timestamp}
 }
 */
 module.exports = Match;
@@ -15,24 +23,27 @@ function Match(obj){
     }
 };
 
-Match.create = function(user_id,activity_id, activity, fn){
-    if(!activity_id
-    || !activity
-    || !(activity.gender == 0 || activity.gender ==1)
-    || !activity.charge
-    || !activity.locale){
-        return;
-    }
-    
-    var key ="{activity_id}_{gender}_{charge}_{locale}"
-    .replace("{activity_id}", activity_id)
-    .replace("{gender}", activity.gender)
-    .replace("{charge}", activity.charge.type)
-    .replace("{locale}", activity.locale);
-    
-    activity.activity_id = activity_id;
-    var ref = db.database().ref("/matches/" + key);
-    ref.set(activity, function(err){
-        fn(new Match(activity), err);
+Match.create = function(user, matchUser, activity_id, fn){
+    var ref = db.databae().ref('/matches/'+activity_id+'_'+matchUser.user_id);
+    var match = {
+        host: user.user_id,
+        host_name: user.first_name,
+        host_gender: user.gender,
+        host_profile_pic: user.profile_pic,
+        participant: matchUser.user_id,
+        participant: matchUser.gender,
+        participant_name: matchUser.first_name,
+        participant_profile_pic: matchUser.profile_pic,
+        create_time: Date.now()
+    };
+    ref.set(match, function(err){
+        fn(match, err);
     });
 }
+
+Match.find = function(match_key, fn){
+    var ref = db.databae().ref('/matches/'+match_key);
+    ref.once('value', function(snapshot){
+        fn(snapshot.exists() ? snapshot.val(): null);
+    });
+};

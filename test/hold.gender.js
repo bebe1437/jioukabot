@@ -1,15 +1,15 @@
 var route = require("../route");
 const user_id = '1155742751164216';
 
-var activity_id = "53a5d64b-6da1-431f-87d9-2a9f5ee2e6f4";
-var next = "charge.show";
+var activity_id = "b1b23b66-3187-48e4-ae69-5f38480ae3c8";
+var next = "show";
 
   var payload ={
     route: 'hold',
     action: 'gender',
     response:{
       key: activity_id,
-      value: '0',
+      value: '2',
       next: next
     }
   };

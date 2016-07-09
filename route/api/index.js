@@ -137,7 +137,8 @@ exports.searchUsers = function(recipientId, activity, block_list, fn){
   ];
   
   var mustnots =[
-    { match:{user_id:activity.host}}
+    //{ match:{user_id:activity.host}}
+    { match:{user_id:'test'}}
   ];
   if(block_list && block_list.length>0){
     block_list.forEach(function(block){
@@ -275,4 +276,92 @@ exports.updateDoc = function(type, doc_id, field, value, fn){
     id: doc_id,
     body: body
   }, fn);
+}
+
+exports.initElasticsearch = function(){
+  es_client.delete({
+    index: 'matches'
+  }, function(res, err){
+    if(err){
+      console.error('Fail to delete index:%s', JSON.stringify(err));
+      return;
+    }
+    
+    var prefer_body = {
+      properties: {
+          user_id:{
+              type:"string"
+          },
+          user_gender:{
+              type: "short"
+          },
+          user_locale:{
+              type: "string"
+          },
+          gender:{
+              type: "short"
+          },
+          charge:{
+              type: "short"
+          },
+          content: {
+              type:      "string",
+              analyzer:  "smartcn"
+          },
+          update_time:{
+              type: "date",
+              format : "yyyy/MM/dd HH:mm:ss"
+          }
+      }
+    };
+    
+    var activity_body = {
+      properties: {
+          activity_id:{
+              type:"string"
+          },
+          host_gender:{
+              "type": "short"
+          },
+          gender:{
+              type: "short"
+          },
+          charge:{
+              type: "short"
+          },
+          locale:{
+              type: "string"
+          },
+          content: {
+              type:      "string",
+              analyzer:  "smartcn"
+          },
+          update_time:{
+              type: "date",
+              format : "yyyy/MM/dd HH:mm:ss"
+          }
+      }
+    };
+    es_client.indices.putMapping({
+      index: 'matches',
+      type: 'prefers',
+      body: prefer_body
+    }, function(error, response){
+      if(error){
+        console.error('Fail to put mapping type[prefers]:%s', JSON.stringify(error));
+        return;
+      }
+      es_client.indices.putMapping({
+        index: 'matches',
+        type: 'activities',
+        body: activity_body
+      }, function(error, response){
+        if(error){
+          console.error('Fail to put mapping type[activities]:%s', JSON.stringify(error));
+          return;
+        }
+        console.log('===Elasticsearch init completed.===');
+      });
+    });
+  });  
 }

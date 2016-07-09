@@ -5,6 +5,8 @@ var Activity = require("../../model/Activity");
 var UserActivity = require("../../model/UserActivity");
 var UserSys = require("../../model/UserSys");
 var User = require("../../model/User");
+var Block = require("../../model/Block");
+var Match = require("../../model/Match");
 var help = require("./help");
 var api = require("../api");
 
@@ -14,7 +16,8 @@ const routes = {
   gender: require("./gender"),
   field: require("./field"),
   status: require('./status'),
-  attend: require("./attend")
+  attend: require("./attend"),
+  next: require("./next")
 }
 /*
  * payload:{
@@ -56,6 +59,7 @@ exports.next = function(action, recipientId, value, activity, next){
 }
 
 exports.save = function(recipientId, activity_id, field, value, fn){
+    var main = this;
     Activity.findByKey(activity_id, function(activity){
         if(!activity){
             route.err(recipientId, 'Can not find activity:'+activity_id);
@@ -88,6 +92,16 @@ exports.save = function(recipientId, activity_id, field, value, fn){
               return;
             }
             fn(recipientId, value, activity);
+            
+            if(activity.content
+            && activity.charge
+            && activity.gender
+            && activity.location
+            && activity.status == 0){
+              setTimeout(function(){
+                main.matchUser(recipientId, activity_id, activity);
+              }, 5000);
+            }
           });
         });
     });
@@ -252,4 +266,71 @@ exports.chargeMessage = function(recipientId, activity_id, next){
     }
   }
   route.cleanFieldMessage(recipientId, messageData);
+}
+
+exports.matchUser = function(recipientId, activity_id,  activity){
+  var main = this;
+  Block.list(activity_id, function(block_list){
+    api.searchUsers(recipientId, activity, block_list, function(hits, err){
+      if(err){
+        console.error('fail to search in elasticsearch:%s', err);
+        return;
+      }
+      if(hits.total==0){
+        route.sendTextMessage(recipientId,'等咖中，請靜待佳音。');
+        return;
+      }
+      User.valid(hits.obj.user_id, function(matchUser, err){
+        User.valid(recipientId, function(user, err){
+           Match.create(user, matchUser, activity_id, function(match ,err){
+             if(err){
+               route.err(recipientId, err);
+               return;
+             }
+             main.matchMessage(recipientId, activity_id, matchUser, hits.obj.content);
+           });
+        });
+      });
+    });    
+  });
+}
+
+exports.matchMessage = function(recipientId, activity_id, matchedUser, msg){
+      var buttons =[
+        {
+            type: "postback",
+            title: "回覆",
+            payload: Payload.matchreply(activity_id+'_'+matchedUser.user_id, matchedUser.user_id).output
+        },{
+            type: "postback",
+            title: "下一位",
+            payload: Payload.holdnext(activity_id, matchedUser.user_id).output
+        }
+      ];
+       var participant = {
+        title: '跟{gender}打聲招呼吧～'.replace('{gender}', matchedUser.gender?'妹':'哥'),
+        subtitle: "[{gender}] {name}：{msg}"
+        .replace('{name}', matchedUser.first_name)
+        .replace('{gender}', matchedUser.gender?'女':'男')
+        .replace('{msg}', msg),
+        image_url: matchedUser.profile_pic,
+        buttons: buttons
+        }
+        
+      var messageData = {
+        recipient: {
+          id: recipientId
+        },
+        message: {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [participant]
+            }
+          }
+        }
+      };  
+    
+      api.sendMessage(messageData);  
 }

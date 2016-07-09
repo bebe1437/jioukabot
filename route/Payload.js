@@ -55,3 +55,15 @@ Payload.matchcharge = function(value, next){
 Payload.matchrequirecontent = function(next){
     return new Payload(init('match', 'require_content', '', '' , next));
 }
+
+Payload.matchreply = function(match_key, receive_id, next){
+    return new Payload(init('message', 'reply', match_key, sender_id , next));
+}
+
+Payload.blockreply = function(match_key, sender_id, next){
+    return new Payload(init('message', 'block', match_key, sender_id , next));
+}
+
+Payload.holdnext = function(activity_id, block_id, next){
+    return new Payload(init('hold', 'next', activity_id, block_id , next));
+}
