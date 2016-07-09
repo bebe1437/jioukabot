@@ -1,6 +1,7 @@
 var route = require("../index");
 var Activity = require("../../model/Activity");
 var UserPrefer = require("../../model/UserPrefer");
+var Match = require("../../model/Match");
 var Block = require("../../model/Block");
 var db = require("../../model/db").get();
 

@@ -9,7 +9,7 @@ var next = "edit";
     route: 'message',
     action: 'block',
     response: {
-      key: 'af21295e-434b-4f89-9119-7ab2e4b4f86f_1155742751164216',
+      key: 'd6fc35a8-4d40-40ab-a14e-ff95a547ac50_1155742751164216',
       value: user_id,
       next: next
     }
