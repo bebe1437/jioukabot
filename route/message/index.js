@@ -31,6 +31,7 @@ exports.save = function(recipientId, match_key, receive_id, value, fn){
       return;
     }
     User.valid(recipientId, function(user){
+      user.user_id = recipientId;
       main.replyMessage(match_key, user, receive_id, value);
     });
   });
