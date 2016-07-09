@@ -99,7 +99,7 @@ exports.save = function(recipientId, activity_id, field, value, fn){
             && activity.location
             && activity.status == 0){
               setTimeout(function(){
-                main.matchUser(recipientId, activity_id, activity);
+                main.findMatch(recipientId, activity);
               }, 5000);
             }
           });
@@ -268,33 +268,37 @@ exports.chargeMessage = function(recipientId, activity_id, next){
   route.cleanFieldMessage(recipientId, messageData);
 }
 
-exports.matchUser = function(recipientId, activity_id,  activity){
+exports.findMatch = function(recipientId,  activity){
   var main = this;
+  var activity_id = activity.activity_id;
   Block.list(activity_id, function(block_list){
-    console.log('===mathcUser block_list:%s===', block_list);
-    api.searchUsers(recipientId, activity, block_list, function(hits, err){
-      if(err){
-        console.error('fail to search in elasticsearch:%s', err);
-        return;
-      }
-      if(hits.total==0){
-        route.sendTextMessage(recipientId, '揪咖繼續幫你找咖囉^_^.');
-        return;
-      }
-      User.valid(hits.obj.user_id, function(matchUser, err){
-        matchUser.user_id = hits.obj.user_id;
-        User.valid(recipientId, function(user, err){
-           user.user_id = recipientId;
-           Match.create(user, matchUser, activity_id, function(match ,err){
-             if(err){
-               route.err(recipientId, err);
-               return;
-             }
-             main.matchMessage(recipientId, activity_id, matchUser, hits.obj.content);
-           });
+    Match.scanUser(activity_id, function(participants){
+      block_list.concat(participants);
+      console.log('===mathcUser block_list:%s===', block_list);
+      api.searchUsers(recipientId, activity, block_list, function(hits, err){
+        if(err){
+          console.error('fail to search in elasticsearch:%s', err);
+          return;
+        }
+        if(hits.total==0){
+          route.sendTextMessage(recipientId, '揪咖繼續幫你找咖囉^_^');
+          return;
+        }
+        User.valid(hits.obj.user_id, function(matchUser, err){
+          matchUser.user_id = hits.obj.user_id;
+          User.valid(recipientId, function(user, err){
+             user.user_id = recipientId;
+             Match.create(user, matchUser, activity_id, 'hold', function(match ,err){
+               if(err){
+                 route.err(recipientId, err);
+                 return;
+               }
+               main.matchMessage(recipientId, activity_id, matchUser, hits.obj.content);
+             });
+          });
         });
-      });
-    });    
+      });       
+    });
   });
 }
 

@@ -1,14 +1,20 @@
 var route = require("../index");
-var hold = require("../hold");
 var Activity = require("../../model/Activity");
+var UserPrefer = require("../../model/UserPrefer");
 var Block = require("../../model/Block");
 var db = require("../../model/db").get();
+
+const routes={
+    hold : require("../hold"),
+    match: require("../match")
+};
 
 /*
 * block match rely
 * response:{
     key:{match_key}
-    value: {block_id}
+    value: {block_id},
+    next: hold/match
 }
 **/
 
@@ -33,13 +39,25 @@ exports.process = function(recipientId, response){
             updates['/matches/'+match_key+'/status'] = status;
             db.update(updates);
             
-            if(status == 1){
-                Activity.findByKey(activity_id, function(activity){
-                    hold.matchUser(recipientId, activity_id,  activity);
-                });
-            }else{
-                route.sendTextMessage(participant_id, '已經幫你關閉這個活動通訊囉！');
-            }
+            
+            Match.find(match_key, function(match){
+                    if(match.next == 'hold'){
+                        if(status == 2){
+                            route.sendTextMessage(match.participant, '已經幫你關閉這個活動通訊囉！');
+                        }
+                        Activity.findByKey(activity_id, function(activity){
+                            activity.activity_id = activity_id;
+                            routes[match.next].findMatch(match.host, activity);
+                        });
+                    }else if(match.next == 'match'){
+                        if(status == 1){
+                            route.sendTextMessage(match.host, '已經幫你關閉這個活動通訊囉！');
+                        }
+                        UserPrefer.find(participant_id, function(UserPrefer){
+                            routes[match.next].findMatch(match.participant, UserPrefer);
+                        });
+                    }
+            });
         });
     });
 }

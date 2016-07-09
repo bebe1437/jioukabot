@@ -67,3 +67,7 @@ Payload.blockreply = function(match_key, sender_id, next){
 Payload.holdnext = function(activity_id, block_id, next){
     return new Payload(init('hold', 'next', activity_id, block_id , next));
 }
+
+Payload.matchnext = function(activity_id, next){
+    return new Payload(init('match', 'next', activity_id, '' , next));
+}

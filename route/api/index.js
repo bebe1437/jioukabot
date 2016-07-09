@@ -3,6 +3,7 @@ var elasticsearch = require('elasticsearch');
 var constants = require('../../constants');
 var route = require('../index.js');
 var dateFormat = require('dateformat');
+var Match = require("../../model/Match");
 
 var es_client = new elasticsearch.Client({
   host: constants.elasticsearch,

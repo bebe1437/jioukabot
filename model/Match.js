@@ -11,7 +11,8 @@ var db = require("./db").get();
     participant:{gender},
     participant_name:{first_name},
     participant_profile_pic:{profile_pic}
-    status: 0-availabe, 1-host-closed, 2-participant-close
+    status: 0-availabe, 1-host-closed, 2-participant-close,
+    next: where to find next match
     create_time:{timestamp}
 }
 */
@@ -23,7 +24,7 @@ function Match(obj){
     }
 };
 
-Match.create = function(user, matchUser, activity_id, fn){
+Match.create = function(user, matchUser, activity_id, next, fn){
     var ref = db.database().ref('/matches/'+activity_id+'_'+matchUser.user_id);
     var match = {
         host: user.user_id,
@@ -34,6 +35,7 @@ Match.create = function(user, matchUser, activity_id, fn){
         participant: matchUser.gender,
         participant_name: matchUser.first_name,
         participant_profile_pic: matchUser.profile_pic,
+        next: next,
         status:0,
         create_time: Date.now()
     };
@@ -47,4 +49,29 @@ Match.find = function(match_key, fn){
     ref.once('value', function(snapshot){
         fn(snapshot.exists() ? snapshot.val(): null);
     });
+};
+
+Match.scanActivity = function(user_id, fn){
+    var ref = db.database().ref('/matches');
+    ref.orderByKey()
+    .endAt(user_id)
+    .once('value', function(snapshots){
+        var activity_ids = [];
+        snapshots.forEach(function(snapshot){
+            activity_ids.push(snapshot.key.split('_')[0]);
+        });
+        fn(activity_ids);
+    });
+}
+Match.scanUser = function(activity_id, fn){
+    var ref = db.database().ref('/matches');
+    ref.orderByKey()
+    .startAt(activity_id)
+    .once('value', function(snapshots){
+        var participants = [];
+        snapshots.forEach(function(snapshot){
+            participants.push(snapshot.val().participant);
+        });
+        fn(participants);
+    });    
 };
