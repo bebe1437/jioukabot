@@ -21,11 +21,7 @@ Block.create = function(main_id, block_id, fn){
     var key = '/blocks/'+main_id+'_'+Date.now();
     var ref = db.database().ref(key);
     ref.set(block_id, function(err){
-        if(err){
-            fn(main_id, block_id, err);
-            return;
-        }
-        fn();
+        fn(err);
     });
 }
 

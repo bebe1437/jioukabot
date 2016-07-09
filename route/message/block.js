@@ -1,8 +1,8 @@
 var route = require("../index");
-var main = require("./index");
+var hold = require("../hold");
 var Activity = require("../../model/Activity");
 var Block = require("../../model/Block");
-var db = require("../../model/db");
+var db = require("../../model/db").get();
 
 /*
 * block match rely
@@ -35,7 +35,7 @@ exports.process = function(recipientId, response){
             
             if(status == 1){
                 Activity.findByKey(activity_id, function(activity){
-                    main.matchUser(recipientId, activity_id,  activity);
+                    hold.matchUser(recipientId, activity_id,  activity);
                 });
             }else{
                 route.sendTextMessage(participant_id, '已經幫你關閉這個活動通訊囉！');
