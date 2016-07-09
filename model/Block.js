@@ -27,7 +27,8 @@ Block.create = function(main_id, block_id, fn){
 
 Block.list = function(activity_id, fn){
     var ref = db.database().ref('/blocks');
-    ref.startAt(activity_id+'_')
+    ref.orderByKey()
+    .startAt(activity_id+'_')
     .once('value', function(snapshots){
         var block_list = [];
         snapshots.forEach(function(snapshot){

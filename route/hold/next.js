@@ -2,7 +2,7 @@ var route = require("../index");
 var main = require("./index");
 var Block = require("../../model/Block");
 var Activity = require("../../model/Activity");
-var db = require("../../model/db");
+var db = require("../../model/db").get();
 
 /*
 * find next match user
@@ -14,11 +14,11 @@ var db = require("../../model/db");
 **/
 
 exports.process = function(recipientId, response){
-    var match_key = response.key;
-    var activity_id = match_key.split('_')[0];
-    var value = response.value;
+    var activity_id = response.key;
+    var participant_id = response.value;
+    var match_key = activity_id+'_'+participant_id;
     
-    Block.create(activity_id, value, function(err){
+    Block.create(activity_id, participant_id, function(err){
       if(err){
         route.err(recipientId, err);
         return;

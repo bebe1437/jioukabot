@@ -271,13 +271,14 @@ exports.chargeMessage = function(recipientId, activity_id, next){
 exports.matchUser = function(recipientId, activity_id,  activity){
   var main = this;
   Block.list(activity_id, function(block_list){
+    console.log('===mathcUser block_list:%s===', block_list);
     api.searchUsers(recipientId, activity, block_list, function(hits, err){
       if(err){
         console.error('fail to search in elasticsearch:%s', err);
         return;
       }
       if(hits.total==0){
-        route.sendTextMessage(recipientId,'等咖中，請靜待佳音。');
+        console.log('===There is not match user for activity:%s===', activity_id);
         return;
       }
       User.valid(hits.obj.user_id, function(matchUser, err){
