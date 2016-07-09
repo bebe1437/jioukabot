@@ -14,7 +14,8 @@ var db = require("../../model/db");
 **/
 
 exports.process = function(recipientId, response){
-    var activity_id = response.key;
+    var match_key = response.key;
+    var activity_id = match_key.split('_')[0];
     var value = response.value;
     
     Block.create(activity_id, value, function(err){
@@ -23,7 +24,7 @@ exports.process = function(recipientId, response){
         return;
       }
       var updates = [];
-      updates['/matches/'+activity_id+'_'+value+'/status'] = 1;
+      updates['/matches/'+match_key+'/status'] = 1;
       db.update(updates);
       
       Activity.findByKey(activity_id, function(activity){
