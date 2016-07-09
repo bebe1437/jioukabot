@@ -139,7 +139,6 @@ exports.searchUsers = function(recipientId, activity, block_list, fn){
   
   var mustnots =[
     //{ match:{user_id:activity.host}}
-    { match:{user_id:'test'}}
   ];
   if(block_list && block_list.length>0){
     block_list.forEach(function(block){
@@ -202,7 +201,7 @@ exports.searchActivities = function(recipientId, userPrefer, block_list, fn){
   ];
   
   var mustnots =[
-     { match:{host:userPrefer.user_id}}
+     //{ match:{host:userPrefer.user_id}}
   ];
   if(block_list && block_list.length>0){
     block_list.forEach(function(block){

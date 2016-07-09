@@ -9,7 +9,7 @@ var next = "edit";
     action: 'status',
     response: {
       key: activity_id,
-      value: 1,
+      value: 0,
       next: next
     }
   };
