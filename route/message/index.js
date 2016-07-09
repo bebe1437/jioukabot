@@ -2,6 +2,7 @@ var Payload = require('../Payload');
 var route = require("../index");
 var Message = require("../../model/Message");
 var User = require("../../model/User");
+var UserSys = require("../../model/UserSys");
 var api = require("../api");
 
 const routes = {
@@ -30,10 +31,17 @@ exports.save = function(recipientId, match_key, receive_id, value, fn){
       route.err(recipientId, err);
       return;
     }
-    User.valid(recipientId, function(user){
-      user.user_id = recipientId;
-      main.replyMessage(match_key, user, receive_id, value);
-    });
+    UserSys.cleanField(recipientId, function(err){
+        if(err){
+          route.err(recipientId, err);
+          return;
+        }
+    
+        User.valid(recipientId, function(user){
+          user.user_id = recipientId;
+          main.replyMessage(match_key, user, receive_id, value);
+        });        
+    });    
   });
 }
 

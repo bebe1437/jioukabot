@@ -5,6 +5,7 @@ var UserActivity = require("../../model/UserActivity");
 var Activity = require("../../model/Activity");
 var Block = require("../../model/Block");
 var Match = require("../../model/Match");
+var UserSys = require("../../model/UserSys");
 var help = require("./help");
 var route = require("../index");
 var api = require("../api");
@@ -37,22 +38,30 @@ exports.save = function(recipientId, key, field, value, fn){
     updates['/userprefer/{user_id}/{field}'.replace('{user_id}', recipientId).replace('{field}', field)] = value;
     updates['/userprefer/{user_id}/updated_time'.replace('{user_id}', recipientId)] = updated_time;
     db.update(updates);
-    UserPrefer.find(recipientId, function(userPrefer){
-        api.updateDoc('prefers', recipientId, field, value, function(err, res){
-          if(err){
-            route.err(recipientId, err);
-            return;
-          }
-            if(userPrefer.content
-            && userPrefer.charge
-            && userPrefer.gender
-            && userPrefer.status == 0){
-              setTimeout(function(){
-                main.findMatch(recipientId, userPrefer);
-              }, 5000);
-            }          
-          fn(recipientId, value, userPrefer);
-        });
+    
+    UserSys.cleanField(recipientId, function(err){
+        if(err){
+          route.err(recipientId, err);
+          return;
+        }
+        
+        UserPrefer.find(recipientId, function(userPrefer){
+            api.updateDoc('prefers', recipientId, field, value, function(err, res){
+              if(err){
+                route.err(recipientId, err);
+                return;
+              }
+                if(userPrefer.content
+                && userPrefer.charge
+                && userPrefer.gender
+                && userPrefer.status == 0){
+                  setTimeout(function(){
+                    main.findMatch(recipientId, userPrefer);
+                  }, 5000);
+                }          
+              fn(recipientId, value, userPrefer);
+            });
+        });        
     });
 }
 
