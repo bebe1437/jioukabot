@@ -28,7 +28,8 @@ exports.process = function(recipientId, response){
       db.update(updates);
       
       Activity.findByKey(activity_id, function(activity){
-        main.matchUser(recipientId, activity_id,  activity);
+        activity.activity_id = activity_id;
+        main.findMatch(recipientId, activity);
       });
     });
 }

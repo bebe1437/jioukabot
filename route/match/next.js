@@ -27,7 +27,7 @@ exports.process = function(recipientId, response){
       db.update(updates);
       
       UserPrefer.find(recipientId, function(userPrefer){
-        main.matchActivity(recipientId, userPrefer);
+        main.findMatch(recipientId, userPrefer);
       });
     });
 }
