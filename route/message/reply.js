@@ -13,7 +13,6 @@ var Match = require("../../model/Match");
 
 exports.process = function(recipientId, response){
     var match_key = response.key;
-    var activity_id = match_key.split('_')[0];
     var value = response.value;
     
     Match.find(match_key, function(match){
@@ -23,7 +22,7 @@ exports.process = function(recipientId, response){
         }
         switch(match.status){
             case 0:
-                main.requireField(recipientId, activity_id, value);
+                main.requireField(recipientId, match_key, value);
                 break;
             default:
                 route.sendTextMessage(recipientId, '喔！配對通訊已經被關閉囉...一"一');
