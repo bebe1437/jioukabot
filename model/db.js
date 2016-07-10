@@ -16,6 +16,6 @@ db.get = function(){
 
 db.prototype.update = function(updates){
     var db = this;
-    console.log('db.update:%s', JSON.stringify(updates));
+    console.log('===db.update:%s===', JSON.stringify(updates));
     db.database().ref().update(updates);
 }

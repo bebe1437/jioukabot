@@ -22,7 +22,7 @@ exports.process = function(recipientId, response){
         route.err(recipientId, err);
         return;
       }
-      var updates = [];
+      var updates = {};
       updates['/matches/'+match_key+'/status'] = 2;
       db.update(updates);
       
